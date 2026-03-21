@@ -1,0 +1,4066 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salesforce Admin Quiz Prep</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>/* Base and Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --primary: #3b82f6;
+    --primary-hover: #2563eb;
+    --success: #10b981;
+    --success-bg: rgba(16, 185, 129, 0.1);
+    --danger: #ef4444;
+    --danger-bg: rgba(239, 68, 68, 0.1);
+    --option-bg: rgba(255, 255, 255, 0.03);
+    --option-hover: rgba(255, 255, 255, 0.08);
+    --option-selected: rgba(59, 130, 246, 0.2);
+    --option-selected-border: #3b82f6;
+    --radius: 12px;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg-gradient);
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+    overflow-x: hidden;
+}
+
+#app {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Header */
+header {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    background: linear-gradient(to right, #60a5fa, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.header-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+    padding: 0 0.5rem;
+}
+
+.progress-bar-container {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+#progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+    width: 0%;
+    transition: width 0.4s ease;
+}
+
+/* Main Content: Glass Panel */
+.glass-panel {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: var(--radius);
+    padding: 2rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.question-header {
+    margin-bottom: 1.5rem;
+}
+
+#question-text {
+    font-size: 1.15rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    white-space: pre-line;
+}
+
+/* Options */
+.options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.option-btn {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 1rem 1.25rem;
+    background: var(--option-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    color: var(--text-main);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    gap: 1rem;
+}
+
+.option-btn:hover:not(.disabled) {
+    background: var(--option-hover);
+    transform: translateY(-2px);
+}
+
+.option-btn.selected {
+    background: var(--option-selected);
+    border-color: var(--option-selected-border);
+}
+
+.option-btn.correct {
+    background: var(--success-bg);
+    border-color: var(--success);
+}
+
+.option-btn.incorrect {
+    background: var(--danger-bg);
+    border-color: var(--danger);
+}
+
+.option-btn.disabled {
+    cursor: default;
+    opacity: 0.8;
+}
+
+.option-label {
+    font-weight: 600;
+    color: var(--text-muted);
+    min-width: 24px;
+}
+
+/* Feedback Box */
+.feedback-box {
+    padding: 1.25rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    font-weight: 500;
+    animation: slideDown 0.3s ease forwards;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.feedback-correct {
+    background: var(--success-bg);
+    color: #34d399;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.feedback-incorrect {
+    background: var(--danger-bg);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    outline: none;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.39);
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px 0 rgba(59, 130, 246, 0.39);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-main);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+@media (max-width: 600px) {
+    .controls {
+        flex-direction: column;
+    }
+    .btn {
+        width: 100%;
+    }
+}
+
+/* Glossary Section */
+.glossary-section {
+    margin-top: 1rem;
+    width: 100%;
+    max-width: 800px;
+}
+
+.glossary-toggle {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    color: var(--text-muted);
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    transition: all 0.2s;
+    justify-content: center;
+}
+
+.glossary-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-main);
+}
+
+.glossary-body {
+    display: none;
+    margin-top: 1rem;
+    overflow-x: auto;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    border: 1px solid var(--glass-border);
+}
+
+.glossary-body.show {
+    display: block;
+    animation: fadeIn 0.4s ease;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    min-width: 500px;
+}
+
+th {
+    background: rgba(255, 255, 255, 0.05);
+    color: #60a5fa;
+    text-align: left;
+    padding: 1rem;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--text-main);
+    vertical-align: top;
+}
+
+td:first-child { width: 40px; color: var(--text-muted); }
+td:nth-child(2) { width: 180px; font-weight: 600; color: #60a5fa; }
+
+tr:hover td {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+/* Results View Styling */
+.results-view {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    animation: fadeIn 0.6s ease;
+}
+
+.result-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    padding: 2rem;
+    text-align: center;
+}
+
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.stat-item {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--glass-border);
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+    display: block;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.category-stats table, .answer-list table {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.knowledge-summary {
+    text-align: left;
+    margin-top: 2rem;
+}
+
+.knowledge-point {
+    background: rgba(239, 68, 68, 0.05);
+    border-left: 4px solid var(--danger);
+    padding: 1.5rem;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 1.5rem;
+}
+
+.kp-title {
+    font-weight: 700;
+    color: #f87171;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.kp-content {
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.badge-success { background: var(--success); color: white; }
+.badge-danger { background: var(--danger); color: white; }
+
+.btn-reset {
+    margin-top: 2rem;
+    background: #475569;
+}
+
+/* New Analysis Components */
+.pass-fail-banner {
+    padding: 1rem;
+    border-radius: 8px;
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+.pass-banner {
+    background: var(--success);
+    color: white;
+}
+.fail-banner {
+    background: var(--danger);
+    color: white;
+}
+
+.priority-box {
+    background: rgba(251, 191, 36, 0.1);
+    border: 1px solid #fbbf24;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+    text-align: left;
+}
+.priority-box h4 {
+    color: #fbbf24;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.answer-history-table {
+    font-size: 0.8rem !important;
+}
+
+.answer-history-table td {
+    padding: 0.5rem !important;
+}
+
+.icon-correct { color: var(--success); font-weight: bold; }
+.icon-incorrect { color: var(--danger); font-weight: bold; }
+
+.history-scroll {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+</style>
+</head>
+<body>
+    <div id="app">
+        <header>
+            <h1>Salesforce Admin II Prep Exam</h1>
+            <div class="header-stats">
+                <span id="score-display">Score: 0 / 0</span>
+                <span id="progress-display">Question: 1 / 132</span>
+            </div>
+            <div class="progress-bar-container">
+                <div id="progress-bar"></div>
+            </div>
+        </header>
+
+        <section class="glossary-section">
+            <button class="glossary-toggle" id="glossary-toggle">
+                <span class="arrow">▼</span> 重要用語集を表示
+            </button>
+            <div class="glossary-body" id="glossary-body">
+                <table>
+                    <thead>
+                        <tr><th>#</th><th>用語</th><th>定義</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1</td><td>主従関係 (Master-Detail)</td><td>親レコードが子レコードの動作を制御するリレーション。親削除で子も削除。共有設定・所有権は親に従う。積み上げ集計項目が作成可能。</td></tr>
+                        <tr><td>2</td><td>参照関係 (Lookup)</td><td>2つのオブジェクトを緩やかにリンク。親削除時に子の削除は必須でなく、独自の所有権を持てる。</td></tr>
+                        <tr><td>3</td><td>エンタイトルメント (Entitlement)</td><td>顧客へのサポートレベル（サービス契約・保証等）を定義。ケースと関連付けてサポート期間を管理。</td></tr>
+                        <tr><td>4</td><td>マイルストン (Milestone)</td><td>エンタイトルメントプロセスにおける重要ステップ（初回応答時間、解決時間等）を定義する時間ベースの指標。</td></tr>
+                        <tr><td>5</td><td>コラボレーション売上予測</td><td>売上・数量・商談分割に基づく将来の売上予測機能。マネージャによる金額調整や売上予測分類の管理が可能。</td></tr>
+                        <tr><td>6</td><td>テリトリー管理</td><td>取引先属性（地域・業種等）に基づきユーザーのアクセス権を動的に制御。ロール階層とは独立した構造。</td></tr>
+                        <tr><td>7</td><td>変更セット (Change Sets)</td><td>Sandboxで作成したカスタマイズ（メタデータ）を本番環境や別のSandboxへ移行するツール。データは移行不可。</td></tr>
+                        <tr><td>8</td><td>動的ダッシュボード</td><td>ログインユーザーの権限に基づき表示データを切替。各ユーザーがアクセス権を持つデータのみ表示。</td></tr>
+                        <tr><td>9</td><td>共有ルール (Sharing Rules)</td><td>OWDで制限されたアクセス権を特定の公開グループ・ロール・テリトリーに対して拡張する設定。</td></tr>
+                        <tr><td>10</td><td>重複ルール / 一致ルール</td><td>レコード作成・更新時に重複を検出し警告・ブロックを行う機能。一致ルールで判定基準を定義。</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        
+        <main class="quiz-container">
+            <div id="quiz-card" class="glass-panel">
+                <div class="question-header">
+                    <h2 id="question-title">Loading...</h2>
+                </div>
+                
+                <div class="question-body">
+                    <p id="question-text"></p>
+                </div>
+                
+                <div class="options-container" id="options-container">
+                    <!-- Options injected here by JS -->
+                </div>
+                
+                <div class="feedback-box" id="feedback-box" style="display: none;">
+                    <!-- Feedback injected here -->
+                </div>
+                
+                <div class="controls">
+                    <button class="btn btn-secondary" id="btn-prev" disabled>Previous</button>
+                    <button class="btn btn-primary" id="btn-submit">Submit Answer</button>
+                    <button class="btn btn-primary" id="btn-next" style="display: none;">Next Question</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+const testData = [
+  {
+    "question": "営業マネージャは、成立した商談が昨年1件もない取引先のレポートがほしいと考えています。 この要件はどのようにして満たせますか？",
+    "options": [
+      "取引先レポートタイプを使用して表形式レポートを作成し、商談を使用したクロス条件を追加する",
+      "商談がない取引先のカスタムレポートタイプを作成する",
+      "取引先レポートタイプと商談レポートタイプを使用して結合レポートを作成する",
+      "取引先レポートタイプと、商談数を計算する数式項目を使用して、サマリーレポートを作成する"
+    ],
+    "answer": "A",
+    "explanation": "「商談がない（WITHOUT）取引先」を抽出するには、取引先レポートを利用し、「クロス条件（関連なし）」を追加するのが正しいアプローチです。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "ユニバーサルコンテナ社では、商談が「交渉/レビュー」または」成立」のフェーズで、各レコードに次の商談項目が存在するようにしたいと考えています。・金額(通貨)が入力されている・クローズ準備完了(チェックボックス)がTrue(チェックされている)\n\nこれらの要件を満たすために、管理者はどの入力規則のエラー条件数式を構成する必要がありますか？",
+    "options": [
+      "AND(OR(StageName = “Negotiation/Review」, StageName = “Closed Won」),OR(ISBLANK( Amount ),Ready_to_close__C=TRUE))",
+      "AND(OR(StageName = “Megotiation/Review」, StageName = “Closed Won」),OR(ISBLANK( Amount ), Ready_to_close__c=FALSE))",
+      "AND(OR(ISPICKVAL(StageName “Negotiation/Review」), ISPICKVAL(StageName, “Closed Won」)), OR(ISBLANK( Amount), Ready_to_close__c = FALSE))",
+      "AND(OR(ISPICKVAL( StageName, “Negotiation/Review」), ISPICKVAL(StageName, “Closed Won」)),OR(NOT(ISBLANK( Amount)) Ready_to_close__c= TRUE))"
+    ],
+    "answer": "C",
+    "explanation": "入力規則は「保存をブロックする（エラーになる）条件」です。フェーズが該当するときに、「金額が空である」もしくは「クローズ準備がオフ」の場合にエラーを出すので、Cの数式（ANDとORの組み合わせ）が正解です。",
+    "category": "自動化プロセス"
+  },
+  {
+    "question": "ユニバーサルコンテナ社では、Developer Sandbox で新しい承認プロセスを作成してテストしました。承認ルートは正しいものの、承認者は通知メールを受信していませんでした。 この問題の原因は何ですか？",
+    "options": [
+      "メールの送信設定は Sandbox では変更できない",
+      "承認は、Fun または Partial Copy Sandbox でのみテストできる",
+      "Sandbox でメールリレーが無効になっている",
+      "Sandbox 内のユーザーのメールアドレスが無効になっている"
+    ],
+    "answer": "D",
+    "explanation": "Sandbox環境更新時、全ユーザーのメールアドレス末尾に「.invalid」が付与され無効化されます。テストメールを受信するにはユーザーのメールアドレスを手動で修正する必要があります。",
+    "category": "環境管理・展開"
+  },
+  {
+    "question": "ユニバーサルコンテナ社は、Sandbox 内で取引先オブジェクトにいくつかの新しい項目と、ページレイアウトに新しいセクションを作成しました。テスト後に、管理者はSandbox から本番環境に新しい項目を含む変更セットを作成してアップロードしました。残念ながら、管理者はページレイアウトを追加するのを忘れました。 管理者がページレイアウトをリリースするために取ることができるオプションはどれですか？２つ選択してください。",
+    "options": [
+      "変更セットをリリースする前に、本番環境で変更セットを編集して、新しいページレイアウトを追加する",
+      "Sandbox内の既存の変更セットにページレイアウトを追加し、変更セットを再度アップロードする",
+      "既存の変更セットをリリースし、ページレイアウトを含む新しい変更セットを作成してリリースする",
+      "Sandbox に作成した変更セットをコピーし、それに新しいページレイアウトを追加して、本番環境にアップロードする"
+    ],
+    "answer": "C,D",
+    "explanation": "一度アップロードした変更セットは編集できません。新しい変更セットを作ってレイアウトのみ送る（C）か、既存の変更セットをコピー（Clone）してレイアウトを追加し再アップロードする（D）しかありません。",
+    "category": "環境管理・展開"
+  },
+  {
+    "question": "ミュート権限セットで削除権限を選択したとき、自動的にミュートされるほかの権限はどれですか？",
+    "options": [
+      "すべてのレコードの参照",
+      "すべてのレコードの編集",
+      "すべてのデータの編集",
+      "すべてのデータの参照"
+    ],
+    "answer": "B",
+    "explanation": "「すべてのデータの編集（Modify All）」等の強力な権限は暗黙的に削除権限を持ちます。そのため削除権限をミュートすると、整合性を保つため自動的に「すべてのレコードの編集」もミュートされます。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "ユニバーサルコンテナ社は、コミュニティの訪問者がコミュニティにログインせずにサポートケースを送信できるようにしたいと考えています。 このリクエストを実装するために必要な２つの機能はどれですか？",
+    "options": [
+      "ケースの割り当てルール",
+      "ケースのクイックアクション",
+      "Web-to-ケース",
+      "ケースフィードアクション"
+    ],
+    "answer": "B,C",
+    "explanation": "ご指摘の通りです！素晴らしいご推察ありがとうございます。コミュニティ（Experience Cloud）上でゲストユーザーがログインせずにケースを作成できるようにするには、組織の「Web-to-ケース（C）」機能が有効化されている必要があり、さらに画面上に表示するフォームの定義として「ケースのクイックアクション（B）」を作成してコンポーネントに割り当てる必要があります。割り当てルールは自動化には便利ですが、ケース送信機能自体の実装要件としてはBとCが必須となります。",
+    "category": "サービス・サポート"
+  },
+  {
+    "question": "ユニバーサルコンテナ社は、取引先に非公開の共有モデルを使用しています。ユーザー A はユーザーBのチームに配属され、同じプロファイルとロールを付与されています。それぞれのユーザーは、20 件のアカウントを所有していますが、ユーザーBは40 件のアカウントを表示できます。一方、ユーザーA は、20件のアカウントしか表示できません。 考えられる理由は何ですか？２つ選択してください。",
+    "options": [
+      "ユーザー Bは、それらのレコードにアクセス可能な共有ルールのメンバーになっている",
+      "ユーザー Bは、それらのレコードに対する手動共有が設定されている",
+      "ユーザー B は、権限セットを介してそれらのレコードにアクセス可能になっている",
+      "ユーザー B は、それらのレコードにアクセス可能なキューのメンバーになっている"
+    ],
+    "answer": "A,B",
+    "explanation": "非公開モデルで同じプロファイル・ロール階層なのにアクセスできるレコード数が異なる場合、「共有ルール（A）」や「手動共有（B）」により所有外レコードのアクセス権が付与されていることが原因です。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "商品を商談に追加しているユーザが、お客様に適した価格を表示する価格表を選択しようとしています。数種類の価格表にアクセスできるはずですが、価格表を選択するオプションが表示されません。 この問題を解決するために、システム管理者が実行すべきことは何ですか？",
+    "options": [
+      "商談レイアウトの[詳細]セクションに[価格表を選択]ボタンを追加する",
+      "商品レイアウトの[詳細]セクションに[価格表を選択]ボタンを追加する",
+      "Lightning ページに[価格表を選択] ボタンを追加する",
+      "商談レイアウトの[商品] 関連リストに[価格表を選択] ボタンを追加する"
+    ],
+    "answer": "D",
+    "explanation": "商談に商品を追加する際、価格表（Price Book）を選択させるには、商談ページの「商品（Products）」関連リスト上に「価格表の選択（Choose Price Book）」ボタンを表示させておく必要があります。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "ユニバーサルコンテナ社は、あるユーザーが他のユーザーとしてログインし、承認なしに取引先オブジェクトを編集していると疑っています。 管理者は、他のユーザーとして誰がログインしているかを確認するためにどの設定を行いますか？",
+    "options": [
+      "デバッグログ",
+      "設定変更履歴",
+      "取引先の項目履歴管理",
+      "ユーザーのログイン履歴"
+    ],
+    "answer": "B",
+    "explanation": "代理ログイン機能（他のユーザーとしてログイン）を使用した記録の追跡には「設定変更履歴（Setup Audit Trail）」を使用します。「誰が・いつ・誰としてログインしたか」というアクションが組織の設定変更履歴にログとして残るため、不正な代理ログインの調査にはBが正解となります。※通常の「ユーザーのログイン履歴」では代理ログインの委任者までは明確に特定しづらいため不正解です。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "システム管理者が見積を設定するときに考慮すべき点はどれですか？２つ選択してください。",
+    "options": [
+      "見積を削除すると、関連する商談や商品も削除される",
+      "見積を複数の有効な見積と同期できる",
+      "商談の見積を作成する前に、商談の価格表が有効になっている必要がある",
+      "見積 PDFのテキストは、ページに右揃えではなく、左揃えになる"
+    ],
+    "answer": "C,D",
+    "explanation": "見積を作成するためには商談に有効な「価格表」が設定されている必要があります（C）。また、標準の見積PDF機能ではテキストの右揃え等は対応できず標準で左・中央揃えになります（D）。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "ユーザーから、特定の取引先レコードを保存しようとすると、Apexトリガーエラーが発生するという報告を受けています。 管理者は、そのレコードの処理に関する詳細情報報をどのように収集できますか？",
+    "options": [
+      "設定変更履歴を確認する",
+      "ユーザーに対するデバッグログを有効にする",
+      "Apexトリガーに対するデバッグログを有効にする",
+      "障害コネクタを使用してフローを作成する"
+    ],
+    "answer": "B",
+    "explanation": "特定のユーザーでApexトリガエラーが発生している場合、詳細な原因を追跡するには、設定のデバッグログ画面から対象のユーザーに対する「ユーザー追跡フラグ」を有効にします。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "ユニバーサルコンテナ社は、求人情報カスタムオブジェクトに関連する申込カスタムオブジェクトを作成したいと考えています。 また、各求人情報への申込数を計算するためのノーコードソリューションも必要です。 この機能を有効にするには、管理者が申込オブジェクトにどのタイプのフィールドを作構成する必要がありますか？",
+    "options": [
+      "主従関係",
+      "参照関係",
+      "積み上げ集計",
+      "数式"
+    ],
+    "answer": "A",
+    "explanation": "親オブジェクト（募集職種）に子レコード（申込）の件数をノーコードで自動計算（積み上げ集計）させるには、2つのオブジェクトが「主従関係（Master-Detail）」である必要があります。",
+    "category": "オブジェクト構成"
+  },
+  {
+    "question": "Cloud Kicks (OK) には、「今月のスニーカー」という商品があり、$1,000 の年間サブスクリプションとして販売しています。 この情報を正確にキャプチャするために、CK のシステム管理者が設定すべき商品スケジュールの種類はどれですか？",
+    "options": [
+      "収益スケジュールのみ",
+      "数量スケジュールのみ",
+      "インバウンドスケジュール",
+      "数量スケジュールと収益スケジュール"
+    ],
+    "answer": "A",
+    "explanation": "総額が一度決まっており、それを複数回（時間経過）に分けて計上（分割請求）する定額サブスクリプションのような販売モデルでは「収益スケジュール（Revenue Schedule）」を使用します。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "コラボレーション売上予測を使用する際、セールス担当者が売上予測タブからアクセスできる情報にはどのようなものがありますか？２つ選択してください。",
+    "options": [
+      "同じチームの他の担当者の売上予測金額",
+      "売上予測分類ごとの売上予測金額",
+      "商談フェーズごとの売上予測金額",
+      "各売上予測金額を構成する商談"
+    ],
+    "answer": "B,D",
+    "explanation": "コラボレーション売上予測（Collaborative Forecasts）のタブでは、現在の売上予測が「売上予測分類ごと（Best Case, Pipelineなど）」に分割された金額として表示され（B）、さらにその金額をクリックすることで、元になっている個々の商談一覧（D）をドリルダウンして確認することができます。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "Developer Edition 組織から他の組織にメタデータをリリースするにはどのリリースツールを使用できますか？２つ選択してください。",
+    "options": [
+      "変更セット",
+      "Visual Studio Code 向け Salesforce 拡張機能",
+      "データローダ",
+      "Ant移行ツール"
+    ],
+    "answer": "B,D",
+    "explanation": "Developer Editionなどのサンドボックスと紐づかない独立した組織間では「変更セット」が使えません。代わりにVS CodeのSalesforce拡張機能（B）やAnt移行ツール・CLI（D）などのAPIツールを使います。",
+    "category": "環境管理・展開"
+  },
+  {
+    "question": "Cloud Kicks の営業担当が、Salesforce の取引先リストビューによく似た取引先レコードがあることに気が付きましたが、Lightning の取引先レコードページの潜在的な重複コンポーネントには重複候補が1つも表示されていません。 潜在的な重複コンポーネントの出力を向上させるために、システム管理者がカスタマイズすべきものはどれですか？",
+    "options": [
+      "重複ジョブ",
+      "重複ルール",
+      "重複レコードセット",
+      "重複レポート"
+    ],
+    "answer": "B",
+    "explanation": "Lightningページの「潜在的な重複コンポーネント」にアラートを表示させるには、裏側で機能している「重複ルール（Duplicate Rule）」のアクション設定で「アラートを表示」が有効になっている必要があります。（元の解答Aは全体スキャンをおこなうジョブのため誤りです）",
+    "category": "データ管理と分析"
+  },
+  {
+    "question": "ユニバーサルコンテナ社には、ジョブポスティングを表す 募集職種 (Position)オブジェクトと、募集職種に応募した人を表す 申込(JobApplication)オブジェクトがあります。申込オブジェクトには、募集職種への参照関係があります。担当者は、申込がないすべての募集職種を示すレポートを実行したいと考えています。 どのソリューションが要件を満たしますか？",
+    "options": [
+      "“募集職種が関連する申込」標準レポートタイプを使用する",
+      "募集職種のない申込のみを表示するカスタムレポートタイプを使用する",
+      "申込のない募集職種のみを表示する標準レポートタイプを使用する",
+      "クロス条件付きの標準の募集職種レポートタイプを使用する"
+    ],
+    "answer": "D",
+    "explanation": "「〇〇を持たない」というネガティブ条件のレコードを抽出・レポートするには、標準のレポートタイプ上で「関連なし（WITHOUT）」のクロス条件を追加するのが正しい方法です。",
+    "category": "データ管理と分析"
+  },
+  {
+    "question": "カテゴリグループ内のナレッジのデータカテゴリをいくつか変更し、階層内のポジションを変更した後、管理者が[保存]をクリックしたときに発生するアクションはどれですか？３つ選択してください。",
+    "options": [
+      "記事の使用履歴がゼロにリセットされる",
+      "ユーザは記事やアンサーを検索する際に、パフォーマンスの問題を感じることがある",
+      "カテゴリー選択リストの値が変更される",
+      "ユーザは記事のアクセスを一時的に拒否される",
+      "ユーザに表示される記事が変更される"
+    ],
+    "answer": "A,C,E",
+    "explanation": "データカテゴリやその階層構造を変更した場合、既存記事のカテゴリ割り当て状態が変化するためユーザーに表示される記事が変わり（E）、カテゴリ選択リストが変更され（C）、さらに過去の「記事の使用履歴」の統計がゼロにリセット（A）される副作用があります。",
+    "category": "サービス・サポート"
+  },
+  {
+    "question": "ユニバーサルコンテナ社では、従業員の年次レビューに必要な情報を格納するため、カスタムオブジェクトを作成しました。従業員が自身のレコードにのみアクセスできるようにする必要があります。管理者は、このオブジェクトに対する組織の共有設定を非公開にしましたが、従業員のマネージャーはメンバーのレコードにアクセスができます。 マネージャによるアクセスをできなくするために、追加となる作業はどれですか？",
+    "options": [
+      "各プロファイルから、カスタムオブジェクトの手動共有のチェックを外す",
+      "マネージャのプロファイルから、カスタムオブジェクトへのアクセス権を取り除く",
+      "共有設定の階層を使用したアクセス許可のチェックを外す",
+      "共有設定から、共有ルールの再適用をする"
+    ],
+    "answer": "C",
+    "explanation": "非公開の共有モデルであっても、デフォルトでは「ロール階層を利用したアクセス権の許可」が有効になっているため上位ロールが見れてしまいます。これを見えなくするには、共有設定の画面で「階層を使用したアクセス許可」のチェックを外す必要があります。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "ユニバーサルコンテナ社のセールスマネージャは、セールス担当者の商談、取引先、および関連ケースをそれぞれダッシュボードに表示したいと考えています。 適切な対応方法はどれですか？",
+    "options": [
+      "動的ダッシュボードを作成し、セールスマネージャが「私のチームのダッシュボードの参照」権限を必ず持つようにする",
+      "商談、取引先、およびケースコンポーネントを使用して、セールス担当者ごとに個別のダッシュボードを作成する",
+      "動的ダッシュボードを作成し、商談、取引先、およびケースの条件を追加する",
+      "ダッシュボードを作成し、ユーザ、商談、取引先、およびケースの条件を追加する"
+    ],
+    "answer": "A",
+    "explanation": "「ログインしている実行ユーザーごと」に自分のデータを動的にフィルタリングして表示する「動的ダッシュボード」を使えば、多数の担当者ごとに個別にダッシュボードを作成する手間を省けます。",
+    "category": "データ管理と分析"
+  },
+  {
+    "question": "マーケティング部門 VP が、進行中の商談がない取引先を対象にしたキャンペーンを開始しようとしています。 システム管理者はこれを手伝うためにどのレポートソリューションを設定できるでしょうか？",
+    "options": [
+      "標準条件",
+      "結合レポート",
+      "レポート作成スナップショット",
+      "クロス条件"
+    ],
+    "answer": "B,D",
+    "explanation": "活動（ToDoや行動）が自動的にアーカイブされる条件として、「終了（期日）から365日経過した行動や完了したToDo（B）」、および「期日が設定されていない状態で作成から365日経過した完了ToDo（D）」があります。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "ユニバーサルコンテナ社には、商談が成立時にセールスオペレーションに活動を割り当てるアクティブなプロセスがあります。セールスオペレーション担当は、その活動が欠落していると報告しています。 管理者が問題を特定するために使用する必要があるツールはどれですか？２つ選択してください。",
+    "options": [
+      "デバッグログ",
+      "メールログ",
+      "時間ベースのワークフローの監視",
+      "一時停止中のフローインタビューリスト"
+    ],
+    "answer": "B,C,D",
+    "explanation": "テリトリーマネージャーは、テリトリー内の取引先に対してフルアクセスを持ちます。その取引先に関連する「商談」に対しては、テリトリー設定にもよりますが一般的に「参照（D）」「編集（B）」「所有者の変更/移行（C）」のアクセス権が付与されます。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "セールス担当の経営幹部は、商談名に取引先名が常に表示されるプロセスの実現を要望しています。 この要件を満たすには自動化はどのように使用できますか？",
+    "options": [
+      "取引先オブジェクトでApex トリガを使用して、取引先名を名に追加する",
+      "新しく作成された商談をデータ品質の確認のために経営幹部に送る承認プロセスを使用する",
+      "取引先名が後ろにつながるように名を更新する、条件に基づくワークフロールールを作成する",
+      "クロスオブジェクト数式を使用し、取引先名を使用して名を更新する入力規則を作成する"
+    ],
+    "answer": "D",
+    "explanation": "取引先と取引先責任者は「参照関係」にあたるため、標準の「積み上げ集計項目」は使用できません。そのため（Flowが選択肢にない旧式の問題の場合）取引先責任者の件数をリアルタイムで取引先へ反映させるには「Apexトリガ（D）」等によるカスタマイズが必要です。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "ユニバーサルコンテナ社では、取引先に関連するフィードバック (Feedback__c) かカスタムオブジェクトを作成し、すべてのフィードバックレコードが取引先所有者と同じユーザーによって所有されてるようにしたいと考えています。 管理者はフィードバックオブジェクトと取引先をどのように関連付ける必要がありますか？",
+    "options": [
+      "階層項目をフィードバックに作成する",
+      "連結オブジェクトを取引先とフィードバックの間に作成する",
+      "主従関係項目をフィードバックに作成する",
+      "参照関係項目をフィードバックに作成する"
+    ],
+    "answer": "C",
+    "explanation": "「子（バグ）を作成するために必ず親（ケース）が必要」という厳しい依存関係（必須関係）を持たせるためのオブジェクトリレーションは「主従関係（Master-Detail）」です。",
+    "category": "オブジェクト構成"
+  },
+  {
+    "question": "ユニバーサルコンテナ社の管理者は、上位５件の顧客の商談と活動を表示する取引先管理ダッシュボードを作成するよう依頼されました。 この要件を満たすために、管理者はどのダッシュボード機能を使用する必要がありますか？",
+    "options": [
+      "ダッシュボードで結合レポートを使用する",
+      "ダッシュボードでマトリックスレポートを使用する",
+      "ダッシュボード検索条件",
+      "動的ダッシュポード"
+    ],
+    "answer": "D",
+    "explanation": "正解はDです。元のサイトのBは不正確です。所有者が部下であってもマネージャーが参照できない場合、取引先責任者の共有設定が「親レコードに連動（Controlled by Parent）」になっており、マネージャーが親である「取引先」へのアクセス権（ロール階層における権限）を持っていないことが原因です。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "記事マネージャが必ず、指定された値をカスタム記事項目に使用するには、システム管理者は何を行えばいいですか？",
+    "options": [
+      "項目の連動関係を使用する",
+      "要件ごとに異なるレコードタイプを作成する",
+      "ページレイアウトで項目を必須にする",
+      "記事の入力規則を作成する"
+    ],
+    "answer": "D",
+    "explanation": "「特定の指定された値のみ」を強制するような厳密なデータ制御を行うためには、単なるページレイアウトの必須設定ではなく、「入力規則（Validation Rule）」を使用するのが最適です。",
+    "category": "サービス・サポート"
+  },
+  {
+    "question": "マイルストン、エンタイトルメントプロセス、およびエンタイトルメントテンプレートを含むエンタイトルメントの管理を設定するには、どの権限が有効化される必要がありますか？２つ選択してください。",
+    "options": [
+      "エンタイトルメントのカスタマイズ",
+      "エンタイトルメントの管理",
+      "アプリケーションのカスタマイズ",
+      "マイルストンの管理"
+    ],
+    "answer": "B,C",
+    "explanation": "エンタイトルメント管理機能全体のセットアップを行うためには、システム管理者に通常付与される「アプリケーションのカスタマイズ」権限と、特有の「エンタイトルメントの管理」権限の両方がプロファイル（または権限セット）で有効である必要があります。",
+    "category": "サービス・サポート"
+  },
+  {
+    "question": "Cloud Kicks のシステム管理者が、新年度の準備の一環として価格表を更新しています。オプションから削除できない価格表が1つあります。 この問題の原因と考えられる設定はどれですか？２つ選択してください。",
+    "options": [
+      "価格表が無効になっている",
+      "価格表に待機中のワークフローアクションがある",
+      "価格表が承認プロセスに関連付けられている",
+      "価格表がアーカイブされている"
+    ],
+    "answer": "B,C",
+    "explanation": "レコードが「待機中の時間ベースのワークフローにキューイングされている（B）」場合や、「承認プロセスの最中（ロック状態）（C）」になっている場合は、システム的に削除がブロックされます。",
+    "category": "自動化プロセス"
+  },
+  {
+    "question": "ユニバーサルコンテナ社は、メール通知と承認プロセスを使用して、管理プロセスを合理化します。代理承認者を許可する新しい承認プロセスが作成されました。テストでは、プライマリの承認者がメール通知を受信しましたが、代理承認者は受信していないことが判明しました。 管理者がトラブルシューティングするために実行する必要がある手順はどれですか？２つ選択してください。",
+    "options": [
+      "代理承認者を許可するように各承認ステップが設定されていることを確認する",
+      "承認履歴をチェックして、[承認申請] ボタンがクリックされたことを確認する",
+      "代理承認者のユーザー設定を確認する",
+      "設定変更履歴から、メールが送信されたことを確認する"
+    ],
+    "answer": "A,C",
+    "explanation": "代理承認者がメールを受け取るには、承認ステップの設定で「代理承認者を許可する」にしていること（A）と、代理承認者自身の個人設定で「承認者または代理担当者の場合」に受信する設定になっていること（C）が必要です。",
+    "category": "自動化プロセス"
+  },
+  {
+    "question": "Cloud Kicks社では、アーカイブ済みの活動の影響を理解したいと考えています。管理者がアーカイブ済みの活動に関して伝えるべき考慮事項はどれですか？2つ選択してください。",
+    "options": [
+      "365日以上前に作成された活動はアーカイブされる",
+      "365日以上前に終了した活動はアーカイブされる",
+      "アーカイブの活動は365日後にされる",
+      "365日以上前に作成され、期日がないクローズされたToDoはアーカイブされる"
+    ],
+    "answer": "B,D",
+    "explanation": "ToDoや行動は、終了や完了から365日が経過すると（あるいは期日なしで作成から365日経過すると）UI上から非表示のアーカイブ状態へ移行します。これにより画面のパフォーマンスが保たれます。",
+    "category": "データ管理と分析"
+  },
+  {
+    "question": "ユニバーサルコンテナ社ではテリトリー管理を使用して、販売テリトリーを管理しています。テリトリーマネージャおよびセールス担当者はロール階層の同じロールレベルに位置します。取引先オブジェクトおよび商談オブジェクトは非公開に設定されています。 テリトリーマネージャはテリトリーに割り当てられた取引先および商談に対してどのレコードアクセス権が許可されますか？３個の回答を選択",
+    "options": [
+      "商談の所有者に関係なく、テリトリーに割り当てられた商談を移行および削除できる",
+      "商談の所有者に関係なく、テリトリー内で取引先に関連付けられたすべての商談を編集できる",
+      "商談の所有者に関係なく、テリトリー内で取引先に関連付けられたすべての商談を移行できる",
+      "商談の所有者に関係なく、テリトリー内で取引先に関連付けられたすべての商談を参照できる",
+      "取引先の所有者に関係なく、テリトリーに割り当てられた取引先を参照、編集、移行、および削除できる"
+    ],
+    "answer": "B,C,D",
+    "explanation": "テリトリーのメンバーは、そのテリトリーの取引先に対しフルアクセスを持ちます。さらに関連する商談に対してもデフォルトのレベル（参照[D]、編集[B]、移行[C]）が与えられます。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "マーケティングマネージャは、取引先に関連付けられた取引先責任者の数を表示する項目を各取引先に追加するように依頼しました。マネージャはこの項目をメールマーケティングのセグメンテーション戦略の一部として使用したいと考えています。",
+    "options": [
+      "取引先責任者の数を数えて取引先に人数を表示する積み上げ集計項目を作成する",
+      "count()関数を使用して、関連する取引先買任者の数を数えるカスタム数式項目を取引先に作成する",
+      "取引先にカスタム項目を作成する。ワークフロールールを使用して、取引先責任者が追加または削除されたときに項目を更新する",
+      "取引先にカスタム項目を作成する。Apexトリガを使用して、取引先責任者が追加または削除されたときに項目を更新する"
+    ],
+    "answer": "D",
+    "explanation": "取引先と取引先責任者は「参照関係」であり、積み上げ集計項目は使用できません。そのため件数を子レコード（連絡先）から自動集計して親にカウントするには、Apexトリガー等のカスタマイズが必要です（※Flowが選択肢にない従来の問題）。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "Cloud Kicks のサポートエージェントはケースとバグを関連付けて、ケースに関連しているバグを追跡できるようにします。バグを作成するためにはケースが必要です。 オブジェクトリレーションのうち、この要件を満たすものはどれですか？",
+    "options": [
+      "階層",
+      "参照関係",
+      "主従関係",
+      "連結"
+    ],
+    "answer": "C",
+    "explanation": "親（ケース）がいないと子（バグ）が作成できないといった強力な依存関係を持たせるには、「主従関係（Master-Detail）」を作成します。",
+    "category": "サービス・サポート"
+  },
+  {
+    "question": "営業マネージャはある取引先責任者を表示できません。取引先責任者の所有者は、ロール階層において営業マネージャの下位に存在しています。 なぜ営業マネージャは、取引先責任者にアクセスしようとした際に、「アクセス権がありません」というエラーが表示されるのでしょうか？",
+    "options": [
+      "取引先責任者の所有者はロール階層内の他のユーザと取引先責任者を共有するためのオプションを設定していない",
+      "取引先責任者の共有設定が非公開のため、アクセスが取引先責任者の所有者とシステム管理者のみに制限されている",
+      "取引先の共有設定は親レコードによって制御され、取引先の所有者は営業マネージャの下位ロールに存在していない",
+      "取引先責任者の共有設定は親レコードにより制御され、取引先の所有者は営業マネージャの下位ロールに存在していない"
+    ],
+    "answer": "D",
+    "explanation": "元のサイトの解答Bは誤りです。所有者が部下でもマネージャーから見えない場合、取引先責任者の組織共有設定が「親レコードに連動（Controlled by Parent）」で、かつ親である取引先のアクセス権がマネージャーに無い（ロール下位に親の所有者がいない等）ことが原因です。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "ユーザは、条件に基づく共有ルールを通して、商品サポートケースに対する「参照・更新」 アクセス権を与えられています。ユーザのプロファイルはケースの」参照」権限のみを所有しています。 ユーザの商品サポートケースに対する編集権限について正しいのはどれですか？",
+    "options": [
+      "ユーザは商品サポートケースを編集できない",
+      "ユーザは自ら作成したケースのみを編集できる",
+      "ユーザは手動共有されたケースのみを編集できる",
+      "ユーザは商品サポートケースを編集できる"
+    ],
+    "answer": "A",
+    "explanation": "重大な誤答（D）の修正です。Salesforceでは「プロファイルの権限」が絶対的な上限です。プロファイルで「参照」権限しかない場合、共有ルールで「参照・更新」を付与しても、オブジェクト自体を編集できないためケースは一切編集できません。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "ユニバーサルコンテナ社では、応募者(Applicant_c) かカスタムオブジェクトと、募集種別(Position_c) カスタムオブジェクトを使用して、採用管理アプリケーションを実装したいと考えています。各募集職種レコードは、それぞれ関連する応募者を多数関連づけることができるようにします。 募集職種レコードが削除された場合でも、応募者レコードは維持されるようにするためには、管理者はどのようなソリューションを推奨すべきですか？",
+    "options": [
+      "募集職種(Position_c) オブジェクトに主従関係項目を作成する",
+      "応募者(Applicant_c) オブジェクトに参照関係項目を作成する",
+      "募集職種(Position_c) オブジェクトに参照関係項目を作成する",
+      "応募者(Applicant_c) オブジェクトに主従関係項目を作成する"
+    ],
+    "answer": "B",
+    "explanation": "親レコードが削除されても子レコードを残すには、主従関係ではなく「参照関係（Lookup）」を使用する必要があります。この場合、子である応募者側に参照関係項目を作ります。",
+    "category": "オブジェクト構成"
+  },
+  {
+    "question": "システム管理者が、システム内に同じ名前を持つ2つの取引先レコードが存在すると指摘しています。同じ名前の取引先責任者レコードが各取引先に関連付けられています。 Salesforce マージ機能を使用する場合、これらの取引先をマージする手順はどれが正しいですか？",
+    "options": [
+      "重複する取引先をマージして、重複する取引先責任者をオプションでマージするというボックスをチェックする",
+      "重複する取引先をマージした後に、重複する取引先責任者をマージする",
+      "重複する取引先責任者をマージした後に、重複する取引先をマージする",
+      "重複する取引先をマージすると、重複する取引先責任者が自動的にマージされる"
+    ],
+    "answer": "B",
+    "explanation": "標準の取引先マージ機能を使用した場合、重複する取引先レコード自体は１つに統合されますが、それに紐づく「取引先責任者」同士が同じ名前であっても自動的にマージされるわけではありません。そのため、先に取引先をマージし、その後に重複した取引先責任者を手動でマージする必要があります。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "ユニバーサルコンテナ社では、見込み客または顧客の2つの状況値で取引先を分類しています。システム管理者は、商談が成立したときに見込み客を顧客に自動的に変更したいと考えています。 システム管理者はこれを遂行するためにどう対応すればよいでしょうか？2つ選択してください。",
+    "options": [
+      "Visualforce を使用して取引先状況項目を更新する",
+      "取引先状況項目を更新する商談ワークフロールールを作成する",
+      "プロセスビルダーを使用して取引先状況項目を更新する",
+      "取引先項目を更新する取引先承認プロセスを作成する"
+    ],
+    "answer": "B,C",
+    "explanation": "元の解答（B,D）は誤りです。子（商談）の変更をトリガーに親（取引先）の項目を自動更新するには「クロスオブジェクト項目自動更新」を用いる必要があり、これは商談のワークフロールール（B）やプロセスビルダー（C）で実装可能です。",
+    "category": "自動化プロセス"
+  },
+  {
+    "question": "Northern Trail Outfitters では、あるレコードタイプを使用したレコードへのアクセスを5人のユーザに制限する必要がありますが、この5人はそれぞれプロファイルが異なります。 この要件を満たすにはどうすればよいですか？",
+    "options": [
+      "５人のユーザの公開グループと、このレコードタイプを使用したカスタムの親ケースレコードを作成して、このケースをレコード所有者ごとに共有する",
+      "このレコードタイプを使用したすべてのケースに、「すべてのデータの参照」アクセス権がある権限セットグループを作成する",
+      "５人のユーザの公開グループを作成し、基準に基づく共有ルールを使用してこのレコードタイプを使用したケースを公開グループと共有する",
+      "５人のユーザ用に「すべてのデータの参照」アクセス権を設定した新しいプロファイルを作成し、他のすべてのプロファイルからこのレコードタイプへのアクセス権を削除する"
+    ],
+    "answer": "C",
+    "explanation": "特定の5人「のみ」にアクセスさせるには、対象を組織の共有設定で非公開にし、その5人で作った「公開グループ」に対して、共有ルールを用いて当該レコードタイプのみを共有するのが最適解です。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "ユニバーサルコンテナ社には4つの営業地域があります。その内訳は、北米、アジア太平洋、ヨーロッパ・中東・アフリカおよびラテンアメリカです。各販売地域はセールス部門 VP が統括しています。名VP は、担当地域のデータのみのコンポーネントで構成されるダッシュボードを毎週月曜日の朝にメールで受け取りたいと考えています。 システム管理者がこの要件を満たすにはどうすればよいでしょうか？",
+    "options": [
+      "レポート作成スナップショントを作成し、ダッシュボードオプションをチェックして、月曜日の朝に配信されるようにスケジュールを設定する",
+      "各地域を条件に設定したダッシュボードを1つ作成して、月曜日の朝に配信されるようにスケジュールを設定する",
+      "条件を作成するために Visualforce を使用してダッシュボードを1つ作成して、月曜日の朝に配信されるようにスケジュールを設定する",
+      "セールス部門 VPことのデータを表示する個別のダッシュボードを作成して、月曜日の朝に配信されるようにスケジュールを設定する"
+    ],
+    "answer": "D",
+    "explanation": "元の解答Bは誤りです。「動的ダッシュボード」はログインユーザー毎にデータを変えられますがスケジュール機能が使えません。また、共有のダッシュボードをスケジュールすると全VPに同じデータが届きます。したがって「VPごとに個別のダッシュボードを作成してスケジュール（D）」が正解です。",
+    "category": "データ管理と分析"
+  },
+  {
+    "question": "Salesforce コンソールのチャットとはどのような機能ですか？３つ選択してください。",
+    "options": [
+      "ナレッジ記事の検索に記事ツールを使用できる",
+      "詳細タブで訪問者に関する情報を参照できる",
+      "チャットは別のエージェントに転送できる",
+      "1つのウィンドウの中で複数の訪問者がチャットできる",
+      "チャットウィンドウでケースをエスカレーションする際に、承認プロセスを使用できる"
+    ],
+    "answer": "A,B,C",
+    "explanation": "チャット（Live Agent）のコンソールでは、ナレッジの即時検索（A）、訪問者の詳細動線の参照（B）、他のエージェントへの転送（C）などが行えます。",
+    "category": "サービス・サポート"
+  },
+  {
+    "question": "財務VP がレコードを確認中、ローン申請者が承認されたか代替商品を案内されたかを示す情報に不備があることに気が付きました。この情報は、営業サイクルの途中で選択リストを使用して収集されます。 商談を完了する前にこの項目が必ず入力されているようにするにはどうすればよいですか？",
+    "options": [
+      "ワークフロールールを作成する",
+      "ページレイアウトでこの項目を必須にする",
+      "項目レベルセキュリティでこの項目を必須にする",
+      "入力規則を作成する"
+    ],
+    "answer": "D",
+    "explanation": "「フェーズがClosed Won（完了）になる時のみ」というような特定の条件を満たしたときに必須にするには、ページレイアウトの必須設定ではなく、数式を使える「入力規則（Validation Rule）」を使用する必要があります。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "変更セットを使用して複数の環境間で移行できるのはどの種類のメタデータですか？２つ選択してください。",
+    "options": [
+      "カスタム項目",
+      "取引先チームロール",
+      "標準選択リスト項目の値",
+      "メールテンプレート"
+    ],
+    "answer": "A,D",
+    "explanation": "変更セットを使用してメタデータを移行できるのは、カスタム項目（A）やメールテンプレート（D）、Apexクラスなどのシステム構成要素です。標準選択リストの値など（C）は移行できません。",
+    "category": "環境管理・展開"
+  },
+  {
+    "question": "ユニバーサルコンテナ社のインサイドセールスマネージャは、リード状況が「進行中」から別の値に変わるまでにどのくらい時間がかかるかの報告できるようにしたいと考えています。営業チームからは、状況値の変更に必要なクリック数を減らしてほしいと依頼されました。 システム管理者はこの要件を満たすために何をする必要ありますか？",
+    "options": [
+      "リード状況項目の項目履歴管理を有効にして、その項目に基づいてレポートを作成する",
+      "リード状況が変更されたときにメールを送信するワークフロールールを使用する",
+      "状況項目が変更されたときに、日付の差を計算する数式項目を使用する",
+      "クイックアクションを使用し、状況項目と日付項目を更新する"
+    ],
+    "answer": "D",
+    "explanation": "元の解答Aのみでは不十分です。「状況の変更クリックを減らす」という営業要望と「期間のレポート」の両方を満たすには、ワンクリックで状況と時間を保存できる「クイックアクション（D）」を作成するのが最適です。",
+    "category": "データ管理と分析"
+  },
+  {
+    "question": "Cloud Kicks には、VIP ショールーム専用のアプリケーションがあります。 このアプリケーションへのアクセスを許可するために使用すべき機能はどれですか？",
+    "options": [
+      "権限セットグループ",
+      "代理管理者",
+      "セッションベースの権限セット",
+      "シングルサインオン"
+    ],
+    "answer": "C",
+    "explanation": "特定の機密アプリへのアクセスを、再認証等を経たセキュアな特定のセッションの間に限定して許可するには「セッションベースの権限セット」を利用します。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "四半期の売上予測を確認していたマネージャが、チームに入ったばかりのメンバーが売上予測に含まれていないことに気が付きました。いくつかのレポートを見ると、この営業担当は今月6件の商談を完了させ、他に3件の商談が進行中です。 このトラブルシューティングでシステム管理者が最初にすべきことは何ですか？",
+    "options": [
+      "「すべての売上予測の参照」権限を含む権限セットを作成する",
+      "ユーザの一般情報の下にある[売上予測を許可]をオンにする",
+      "「すべての売上予測の参照」権限を営業プロファイルに割り当てる",
+      "ユーザが選択しているアプリケーションを確認し、必要に応じてタブを調整する"
+    ],
+    "answer": "B",
+    "explanation": "ユーザーが Collaborative Forecasts (コラボレーション売上予測) の集計対象として表示されるためには、ユーザーレコードの設定にある「売上予測を許可（Allow Forecasting）」のチェックボックスをオンにする必要があります。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "管理者は、変更セットを使用して Sandbox 内のカスタマイズを本番環境に移行しています。最初の変更セットを作成した後、一部のコンポーネントが欠落していることに気付きました。 管理者が変更セットに関して行う必要がある考慮事項は何です？３つ選択してください。",
+    "options": [
+      "変更セットのコピーを作成して、アップロードされた変更セットに連動コンポーネントを追加する",
+      "新しい変更セットを使用して、メタデータとデータを Sandboxから本番環境にリリースする",
+      "すべての連動コンポーネントをリリースする",
+      "アップロードされた変更セットを編集して、追加のコンポーネントを追加する",
+      "送信変更セットに権限とアクセス設定を追加する"
+    ],
+    "answer": "A,C,E",
+    "explanation": "変更セットに関する考慮事項として、一度アップロードされたものは修正できないためコピーして追加する（A）、連動コンポーネントを含める（C）、カスタム項目等を見せるためにプロファイルなど設定（パーミッション）を追加する（E）ことが必要です。",
+    "category": "環境管理・展開"
+  },
+  {
+    "question": "変更セットを使用して承認プロセスを移行するときにシステム管理者は何を考慮すべきですか？",
+    "options": [
+      "変更セットには、ソース組織の有効承認プロセスの順序は含まれない",
+      "対象組織にいったんリリースされると、承認プロセスの一意の名前は変更できない",
+      "変更セットには、ソース組織の承認および却下アクションが含まれない",
+      "標準オブジェクトのカスタム項目は、対象組織に手動で追加する必要がある"
+    ],
+    "answer": "A",
+    "explanation": "承認プロセスを変更セットで移行した場合、複数のプロセスがある際の「評価順序」はメタデータに含まれないため、リリース先の組織で手動で順序を設定し直す必要があります。",
+    "category": "環境管理・展開"
+  },
+  {
+    "question": "ユニバーサルコンテナ社の HR ディレクターは、Position カスタムオブジェクトの給与範囲と給与等の選択リストエントリを更新する必要があります。これらの Position オブジェクトに対する変更は、頻繁に発生するため、これらの選択リスト値を更新する機能を要求しています。 これを許可するために、管理者はどの機能を考慮するべきですか？",
+    "options": [
+      "Positionオブジェクトの代理管理権限",
+      "Positionオブジェクトのすべてのデータの変更権限を含む権限セット",
+      "Positionオブジェクトの選択リストに対する編集権限を設定した項目アクセス権限",
+      "カスタムメタデータタイプを使用した画面フロー"
+    ],
+    "answer": "A",
+    "explanation": "システム管理者以外の特定ユーザー（HRディレクターなど）に、特定のカスタムオブジェクトの項目や選択リスト値の管理のみを許可するには、「代理管理者（Delegated Administration）」機能を使用するのが最適です。",
+    "category": "オブジェクト構成"
+  },
+  {
+    "question": "セールス部門 VPは、商談フェーズが変更されたときに、「次のステップ」項目が必ず更新されるようにしたいと考えています。 このプロセスを自動化するにはどうすればよいでしょうか？",
+    "options": [
+      "次の数式を使用したワークフロールールを作成する：AND( ISCHANGED(ISPICKVAL(StageName), ISCHANGED(NextStep))",
+      "次の数式を使用した入力規則を作成する：AND( ISCHANGED(ISPICKVALSstageName)), NOT( ISCHANGED(NextStep)))",
+      "次の数式を使用した入力規則を作成する：AND( ISCHANGED(StageName), NOT( ISCHANGED(NextStep)))",
+      "次の数式を使用したワークフロールールを作成する：AND( ISCHANGED(StageName), NOT( ISCHANGED(NextStep))"
+    ],
+    "answer": "C",
+    "explanation": "「フェーズ（StageName）が変更されたのに、NextStepが変更されていない場合はエラーにする」というロジックは、入力規則にて「ISCHANGED(StageName) かつ NOT(ISCHANGED(NextStep))」と記述します。",
+    "category": "自動化プロセス"
+  },
+  {
+    "question": "システム管理者がデータローダを使用して取引先レコードの所有権を移行すると、どのような結果になりますか？２つ選択してください。",
+    "options": [
+      "すべての取引先チームが、移行されたレコードから削除される",
+      "新しいすべての所有者に新しい取引先の所有権が自動的に通知される",
+      "レコードの所有権をベースにするすべての共有ルールが再適用される",
+      "すべての手動共有が、移行されたレコードから削除される"
+    ],
+    "answer": "C,D",
+    "explanation": "データローダ（API）経由で所有者を一括変更した場合でも、所有者を基準とする共有ルールは再計算・再適用され（C）、同時に所有者が変わるため以前の「手動共有」で作成された共有レコードはすべて一掃（削除）されます（D）。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "ユニバーサルコンテナ社のサポートチームは顧客とのサービスレベル契約を追跡する必要があります。現在は顧客から連絡があったときに契約を手作業で検索しています。 このプロセスを自動化するにはシステム管理者はどうすればよいでしょうか？",
+    "options": [
+      "サポートマネージャに古いケースを伝えるメールアラートを送信するワークフロールールを設定する",
+      "エンタイトルメントを有効化し、エンタイトルメントおよびサービス契約のタブを追加する",
+      "ケースフィードを有効化し、ケースフィードレイアウトに契約カスタムパブリッシャーを追加する",
+      "サービスレベル契約の優先順位が高い顧客のために非公開 Chatter グループを作成する"
+    ],
+    "answer": "B",
+    "explanation": "顧客のSLA（サービスレベル契約）をシステム上で自動的に追跡・アラートさせるには、Salesforce標準の「エンタイトルメント管理」と「サービス契約」を設定するのが正しいアプローチです。",
+    "category": "サービス・サポート"
+  },
+  {
+    "question": "ユニバーサルコンテナ社では、新しいリードプロセスを実装しており、以下のことを実現したいと考えています。・５つの異なる状況項目を通じてリードをトラックする・各状況にどれくらいの期間を要したかをレポートで表示する・リードの作成から変換までのすべての存続期間に関する情報をレポートで表示する・リード状況に値が設定されないことを防止する\nこの要件はどのようにして満たすことが推奨されますか？",
+    "options": [
+      "カスタムの日付項目を複数作成し、各状況ごとにワークフロールールを作成する。そして、各状況ごとの期間を計算するカスタム数式項目を作成する。また、値の入力をスキップできない入力規則を作成する。",
+      "リード状況項目を追跡するために、リード履歴レポートを使用し、状況期間を計算するためにカスタムのレポート項目を使用する。また、値の入力をスキップできない入力規則を作成する。",
+      "各状況ごとのカスタム日付項目にデータをセットする Apex トリガを使用する。そして、各状況ごとの期間を計算するカスタム数式項目を作成する。",
+      "各状況ごとの期間を追跡するため、項目履歴管理をリード状況項目に対して有効にする。また、値の入力をスキップできない入力規則を作成する。"
+    ],
+    "answer": "B",
+    "explanation": "リードの状況（フェーズ）ごとにどれだけの期間滞留したかをレポートするには、リード履歴管理を有効にした上で、標準の「リード履歴レポート」（期間/Duration項目が含まれます）を利用し、入力スキップは入力規則で防ぎます。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "カスタマーコミュニティに Experience Cloud を使用している Ursa Major Solar では、基本的な質問に答え、さらなるサポートが必要な場合にはトピックと対応可能状況に応じてお客様を適切なエージェントに転送するチャットボットをサイトに導入したいと考えています。 システム管理者がこの要望に対応するために設定すべき機能はどれですか？２つ選択してください。",
+    "options": [
+      "連絡要求フロー",
+      "オムニチャネル",
+      "Web-to-ケースフォーム",
+      "スキルベースのルーティング"
+    ],
+    "answer": "B,D",
+    "explanation": "チャットボットからエージェントへの転送において、「対応可能状況」での割り当てには『オムニチャネル（B）』を、「トピックや内容に応じた適任者への割り当て」には『スキルベースのルーティング（D）』を使用します。",
+    "category": "サービス・サポート"
+  },
+  {
+    "question": "テリトリー管理が有効になっている Cloud Kicks のシステム管理者が、テリトリーモデルを設定しています。テリトリーの一部のユーザは、取引先に関連付けられている取引先責任者と商談にアクセスする必要があります。 テリトリーのユーザが使用可能な機能はどれですか？２つ選択してください。",
+    "options": [
+      "参照のみ",
+      "参照と編集",
+      "参照と移行",
+      "参照、編集、移行、削除"
+    ],
+    "answer": "A,B",
+    "explanation": "元の解答（A,C）は不正確です。テリトリー管理において、取引先に関連する商談へのアクセスレベルとして選べるのは「アクセス権限なし」「参照のみ（A）」「参照および更新（編集）（B）」のいずれかです。移行アクセスは付与ルールが異なります。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "Cloud Kicks には、完了した商談は編集できないというポリシーがあります。時として、会計上の理由により、商談に調整を行う必要のあることがあります。元の商談の完全性を維持するために、調整を追跡するカスタムオブジェクトが作成されています。 ユーザが、調整回数を追跡する積み上げ集計項目を必要としています。 システム管理者はどのような方法でこの目的を達成すべきですか？",
+    "options": [
+      "商談に参照関係を作成する",
+      "調整に参照関係項目を作成する",
+      "調整に主従関係項目を作成する",
+      "商談に主従関係を作成する"
+    ],
+    "answer": "C",
+    "explanation": "親オブジェクト（商談）に対して、子オブジェクト（調整）のレコード情報（件数や合計）を「積み上げ集計」で親に反映させるためには、子オブジェクト側に「主従関係（Master-Detail）」を作成する必要があります。",
+    "category": "オブジェクト構成"
+  },
+  {
+    "question": "サポートマネージャが、同じようなスキルやヘルプ記事を要した他のケースを見つけ出す手段を求めています。こうした手段があれば、お客様に繰り返し生じる問題への対応に適したサポートエージェントをすぐに見つけることができます。 この場合に役立つオブジェクトリレーションはどれですか？",
+    "options": [
+      "階層関係",
+      "自己参照",
+      "間接関係",
+      "主従関係"
+    ],
+    "answer": "B",
+    "explanation": "元の解答（C）は誤りです。ケースオブジェクト内で「他の関連するケース」や「似たケース」をリンクして追跡するために標準的に使用されるリレーションシップは、自分自身のオブジェクトを参照する「自己参照（Self Lookup）」です。",
+    "category": "サービス・サポート"
+  },
+  {
+    "question": "ユニバーサルコンテナ社では、カスタムオブジェクトを使用して顧客のクレームを追跡しています。そして、そのカスタムオブジェクトに他のクレームを参照する項目を追加したいと考えています。どのリレーションタイプを使用してこれを実現できますか?",
+    "options": [
+      "主従関係",
+      "参照関係",
+      "連結関係",
+      "階層関係"
+    ],
+    "answer": "B",
+    "explanation": "同一のオブジェクト同士（クレーム→別のクレーム）を関連付けて親・子や関連レコードとして繋ぐには、対象を自オブジェクトとする「自己参照関係（Lookup/参照関係）（B）」を使用します。※元の解答等の連結関係は不要です。",
+    "category": "オブジェクト構成"
+  },
+  {
+    "question": "コラボレーション売上予測では何ができますか?３つ選択してください。",
+    "options": [
+      "目標をオーバーレイする",
+      "売上予測分類名を変更する",
+      "売上予測分類を追加する",
+      "商談の分割を使用して予測する",
+      "デフォルトの売上予測通貨設定を選択する"
+    ],
+    "answer": "B,D,E",
+    "explanation": "コラボレーション売上予測では、売上予測分類の名前（「パイプライン」「最善ケース」など）をカスタマイズして変更すること（B）や、商談収益の分割（商談チームでの分配）を含めて予測すること（D）、およびデフォルトの売上予測通貨を設定すること（E）が可能です。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "ユニバーサルコンテナ社では、本番環境に Salesforce Field Service ライセンスを購入しました。これらのライセンスを現在使用している Sandbox にも、最小限のインパクトで有効にしたいと考えています。 管理者は、Sandbox 環境へライセンス情報を反映させるために、どのようにすべきですか?",
+    "options": [
+      "[本番ライセンスに一致]機能を使用する",
+      "本番環境から Sandbox を更新する",
+      "Salesforce サポートにケースを送信する",
+      "テンプレートを使用して、本番環境と Sandbox をマージする"
+    ],
+    "answer": "A",
+    "explanation": "Sandbox環境のライセンス情報を手作業やリフレッシュで更新するのではなく、Sandbox組織の「組織情報」画面にある「本番ライセンスに一致」ボタンをクリックすることで、本番環境の最新のプロビジョニング済みライセンスをSandboxに即座に同期できます。",
+    "category": "環境管理・展開"
+  },
+  {
+    "question": "変更セットに関する正しい記述はどれですか?３つ選択してください。",
+    "options": [
+      "変更セットにコンポーネントを追加すると、すべての連動コンポーネントが自動的に追加される",
+      "変更セットを本番環境にリリースすると、デフォルトですべての Apex テストが自動的に実行される",
+      "カスタム項目を変更セットに追加すると、項目レベルセキュリティも自動的に含まれる",
+      "リリース前にユーザが変更セットを確認できる機能がある",
+      "変更セットを使用するには、少なくとも1つのインバウンド接続と1つのアウトバウンド接続が存在する必要がある"
+    ],
+    "answer": "B,D,E",
+    "explanation": "変更セットは、①本番環境へのリリース時にはローカルのApexテストが自動実行され（B）、②リリース前に「検証（Validate）」を実行してエラーがないか確認でき（D）、③送信側・受信側でのリリース接続設定（E）が必須となります。※連動コンポーネントは「自動」ではなく手動ボタンで追加するためAは誤りです。",
+    "category": "環境管理・展開"
+  },
+  {
+    "question": "２つのオブジェクトの間で参照関係が作成されている場合で、参照レコードが削除されたときの処理として、システム管理者はどのオプションを選択できますか?３つ選択してください。",
+    "options": [
+      "ユーザに他のレコードを入力させて、参照関係を修復する",
+      "関連レコードも削除する",
+      "参照関係の一部となっている参照レコードの削除を許可しない",
+      "参照項目の値をクリアする",
+      "レコード所有者に通知する"
+    ],
+    "answer": "B,C,D",
+    "explanation": "重大な誤答（A）の修正です。Salesforceの標準の参照関係項目で親レコードが削除されたときの動作オプションは「①この項目の値をクリアする（D）」「②参照関係の一部となっているレコードの削除を許可しない（C）」「③関連レコードも削除する（B）」の３つのみです。",
+    "category": "オブジェクト構成"
+  },
+  {
+    "question": "営業担当者ごとの商談の一覧表示する商談パイプラインレポートに、同じ取引先に対して作成された複数の商談が表示されています。セールスマネージャーは、各担当者がビジネスを作成した個々の取引先の数を知りたいと考えていす。 営業担当者ごとの個々の取引先の数を確認したい場合、レポートをどのように変更すべきですか?",
+    "options": [
+      "取引先名のバケット項目を追加し、バケットでグループ化する",
+      "カスタム集計項目を作成し、取引先ごとにグループ化する",
+      "レポートビルダーの [取引先名] 列で [ユニークカウントを表示]を選択する",
+      "取引先でグループ化し、デフォルトでチェックされるカスタムチェックボックス項目を集計する"
+    ],
+    "answer": "C",
+    "explanation": "レポートで同じ取引先名の重複を排除して純粋な「社数」を数えたい場合は、対象列（取引先名）の設定メニューから「一意の件数を表示（Show Unique Count）」を選択するのが最も簡単で標準的な手法です。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "Northern Trail Outfitters では、5人の代理管理者と２人のシステム管理者がいます。営業担当者のログイン設定が変更されたというケースが複数登録されています。 管理者は、どの設定が変更されたかをどこで確認することができますか?",
+    "options": [
+      "ログイン履歴",
+      "設定変更履歴",
+      "項目履歴管理",
+      "デバッグログ"
+    ],
+    "answer": "B",
+    "explanation": "ユーザーのログイン設定（ログイン時間帯、IPアドレス制限、パスワードリセットなど）を「誰が・いつ」変更したかを追跡するためには管理用の「設定変更履歴（Setup Audit Trail）」を確認します。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "ユーザのロールをEMEA (ヨーロッパ・中東・アフリカ) セールス担当者からUS (アメリカ) セールス担当者に変更します。 所有者に基づく共有ルールはそのユーザが所有するレコードにどのような影響を与えますか?",
+    "options": [
+      "オブジェクトのレコードの所有権に影響を与えるが、カスタムオブジェクトには影響を与えない",
+      "所有者に基づく共有ルールはすべて再適用されない",
+      "所有者に基づく共有ルールはすべて再適用される",
+      "ユーザがロール階層の上位に移動した場合、所有権をベースにした共有ルールにのみ影響を与える"
+    ],
+    "answer": "C",
+    "explanation": "ユーザーがロール階層を移動（ロールの変更）すると、そのユーザーが現在所有しているレコードに対して、ロールや所有権に依存するすべての「所有権ベースの共有ルール」がバックグラウンドで再計算・再適用されます。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "ユニバーサルコンテナ社は、毎月のサービスサブスクリプションを販売しており、商談レポートが毎月受け取る金額を正確に表していることを確認したいと考えています。 この要件を満たすために、管理者はどのソリューションを使用する必要がありますか?",
+    "options": [
+      "プロセスビルダーとフローを使用して、カスタムオブジェクトレコードを作成する",
+      "各レポート期間に任意の数式項目を使用する",
+      "毎月ごとに週のレポート作成スナップショットを使用する",
+      "各収益期間の製品収益スケジュールを使用する"
+    ],
+    "answer": "D",
+    "explanation": "商品の総額を特定の期間（毎月など）にわたって均等に分割・またはスケジュールして売上認識を行いたい場合は、商品ごとの「収益スケジュール（Revenue Schedule）」機能を使用します。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "ユニバーサルコンテナ社は、参照関係を主従関係に変換したいと考えています。 リレーションを変換する前に、管理者はどのようなアクションを実行する必要がありますか?",
+    "options": [
+      "既存のすべてのレコードの現在のルックアップ項目に値があることを確認する",
+      "項目タイプを変更する前に、親の積み上げ集計項目を削除する",
+      "新しい主従関係項目を追加する前に、現在のルックアップ項目を削除する",
+      "主従関係項目で[親の変更を許可]オプションを選択する"
+    ],
+    "answer": "A",
+    "explanation": "「参照関係」では親レコードが空（空白）でも許容されますが、「主従関係」では親レコードの指定が必須となります。そのため変換する前に、既存のすべての子レコードのルックアップ項目に値が入力されていることを確認（または入力）する必要があります。",
+    "category": "オブジェクト構成"
+  },
+  {
+    "question": "ユニバーサルコンテナ社では、従業員が休暇申請を提出して、承認を得るために上司にその申請を送るプロセスがあります。ある従業員が申請を提出しようとしましたが、提出できませんでした。 システム管理者はこれをトラブルシュートするために何をすべきですか?",
+    "options": [
+      "ユーザレコード上には有効なユーザである上司レコードが必ず割り当てられるようにする",
+      "ワークフローを使用して、プロセスに問題が起きた場合にシステム管理者にメールを送信する",
+      "システムログを確認して根本原因を特定する",
+      "承認ステップにアクションが必ず関連付けられるようにする"
+    ],
+    "answer": "A",
+    "explanation": "承認プロセスで承認者を「マネージャー（上司）」に設定している場合、申請者のユーザーレコードの「マネージャー」項目が空（空白）、または無効なユーザーが設定されていると、承認ルートを計算できずに申請エラーが発生します。",
+    "category": "自動化プロセス"
+  },
+  {
+    "question": "ユニバーサルコンテナ社は、コミュニティの使用を検討しています。各パートナーは製品に関連付けられており、個別のコミュニティが必要になります。一部のパートナーは、複数のコミュニティにアクセスする必要があります。 管理者が知っておくべき考慮事項は何ですか?２つ選択してください。",
+    "options": [
+      "最大 100個のコミュニティの組織制限には、アクティブ、非アクティブ、およびプレビューコミュニティが含まれる",
+      "コミュニティライセンスは、特定のコミュニティに関連付けられる",
+      "メンバーベースまたはログインベースのコミュニティライセンスを選択することができる",
+      "最大 100個のコミュニティの組織制限には、無効なコミュニティおよびプレビューコミュニティは含まない"
+    ],
+    "answer": "A,C",
+    "explanation": "Experience Cloud（旧コミュニティ）の1組織あたり最大100個の制限には、有効・無効・プレビューすべてが含まれます（A）。また、付与するライセンスとしてメンバー（Named）ベースか、ログイン回数ベースかを選択できます（C）。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "ステム管理者はリードを作成するユーザに[重複の検索] ボタンのアクセス権を許可しようと考えています。システム管理者は、どのリードオブジェクトレベル権限をユーザに与えることになりますか?",
+    "options": [
+      "マージ",
+      "すべての参照",
+      "削除",
+      "参照および編集"
+    ],
+    "answer": "C",
+    "explanation": "ユーザーインターフェース上で「重複の検索（Find Duplicates）」ボタンを使用して「レコードのマージ」を行うためには、対象のオブジェクト（この場合はリード）に対する「削除（Delete）」権限がシステム仕様上必要になります。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "代理管理者機能では、どれがサポートされていますか?３つ選択してください。",
+    "options": [
+      "コミュニティユーザのロック解除",
+      "非コミュニティユーザのロック解除",
+      "カスタムオブジェクトの管理",
+      "ロールの管理",
+      "ユーザの作成と編集"
+    ],
+    "answer": "B,C,E",
+    "explanation": "代理管理者（Delegated Admin）は、指定されたロールの社内ユーザーの作成・編集（E）やパスワードリセット・ロック解除（B）、特定のカスタムオブジェクトの管理（C）が可能です。コミュニティユーザーの管理やロール階層自体の管理は行えません。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "さまざまなソースからユニバーサルコンテナ社に集まるリードを適切なセールスチームに割り当てる必要があります。アジア太平洋地域のリードの場合、セールスディレクターが承認した場合は外部パートナーにリードを移行できます。リードがパートナーに割り当てられた場合は、そのパートナーのチャネルマネージャに知らせる必要があります。 この要件を満たすために少なくとも必要な自動化ツールの組み合わせはどれですか?",
+    "options": [
+      "割り当てルール、承認プロセス、およびワークフロールール",
+      "割り当てルールおよび承認プロセス",
+      "割り当てルールおよびワークフロールール",
+      "割り当てルール、自動応答ルール、およびワークフロールール"
+    ],
+    "answer": "A",
+    "explanation": "リードを適切な担当者へ割り当てる（割り当てルール）、ディレクターに承認を求める（承認プロセス）、承認完了後にパートナーのマネージャーへメール等で通知する（ワークフロールール/Flow）、という３つのツールの組み合わせにより実現されます。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "システム管理者は組織の商品にどの種類の価格を設定できますか？３つ選択してください。",
+    "options": [
+      "標準価格",
+      "販売価格",
+      "値引価格",
+      "リスト価格",
+      "商品価格"
+    ],
+    "answer": "A,B,D",
+    "explanation": "Salesforceの商品価格設定には３つの階層があります。商談等で確定する「販売価格（B）」、価格表ごとの定価である「リスト価格（D）」、そして組織のベースとなる「標準価格（A）」です。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "営業マネージャが、１人の営業担当者が所有する取引先責任者を参照できません。この営業担当者は、ロール階層で営業マネージャの下に設定されています。 営業マネージャが取引先責任者を参照できないのはなぜですか?",
+    "options": [
+      "取引先責任者の共有設定が非公開である",
+      "取引先責任者が取引先に関連付けられていない",
+      "取引先責任者の共有設定で、階層を使用したアクセス許可のチェックがはずされている",
+      "取引先責任者の共有の直接設定が、マネージャに設定されていない"
+    ],
+    "answer": "B",
+    "explanation": "誤答Cの修正です。「プライベート取引先責任者（取引先＝親レコードと紐付いていない連絡先）」は、組織の共有設定やロール階層に関わらず「所有者とシステム管理者しか見えない」という特殊な仕様があります。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "管理者は、マーケティングユーザ標準プロファイルが割り当てられているユーザに、商品オブジェクトに対する、参照、作成、編集権限を付与するように依頼されています。 この要件はどのようにして満たすことができますか?２つ選択してください。",
+    "options": [
+      "マーケティングユーザ標準プロファイルを編集し、商品オブジェクトに対する参照、作成、編集権限を付与する。",
+      "商品オブジェクトに対する参照、作成、編集権限を付与した権限セットを作成し、それをマーケティングユーザに割り当てる。",
+      "商品オブジェクトに対する読み取り、書き込み権限を付与した権限セットを作成し、それをマーケティングユーザに割り当てる。",
+      "マーケティングユーザ向けに新しいプロファイルを作成し、商品オブジェクトに対して参照、作成、編集権限を付与する。"
+    ],
+    "answer": "B,D",
+    "explanation": "Salesforce標準プロファイルはオブジェクトのカスタム権限（CRUD）を直接編集・変更できません。そのため、①追加の「権限セット」を作成して与える（B）、か ②標準プロファイルをコピーして「カスタムプロファイル」を作成し権限を変える（D）の２つの方法を使用します。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "ユニバーサルコンテナ社では、取引先への制限が設定された「サプライアイテム」という名前のカスタムオブジェクトを使用してリソースを追跡します。サプライアイテムレコードは、取引先レコードを所有するユーザのみが参照できる必要があります。 適切に表示されるようにするにはどの共有設定を設定しますか?",
+    "options": [
+      "親レコードに連動",
+      "非公開",
+      "公開/参照のみ",
+      "公開/参照・更新・所有権の移行"
+    ],
+    "answer": "A",
+    "explanation": "元の解答（非公開）は誤りです。子オブジェクト（サプライアイテム）のアクセス権を、完全に親オブジェクト（取引先）のアクセス権（所有権）と同一に連動させたい場合は、組織の共有設定を「親レコードに連動（Controlled by Parent）」にするのが正解です。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "価格表の作成権限を持つユーザが、商品をコピーして既存の商品と同じ情報を設定した新しい商品を素早く作成できるようにしたいと考えています。 商品をコピーする際に重要な考慮事項はどれですか?",
+    "options": [
+      "ユーザがアクセス権を持たない価格表に価格は追加されない",
+      "追加した価格は、価格表には作成されない",
+      "ユーザがアクセス権を持たない価格表に価格が追加される",
+      "この新しい価格表を使用する前に、価格表に追加された価格を有効化する必要がある"
+    ],
+    "answer": "A",
+    "explanation": "商品をコピー（Clone）した場合、関連する「価格表エントリ（Price Book Entries）」もコピーされますが、実行するユーザー自身がアクセス権を持っていない価格表の価格エントリはセキュリティ上コピー（追加）されません。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "エンタイトルメントプロセスの作成に関する以下の記述のうち、正しいものはどれですか?２つ選択してください。",
+    "options": [
+      "他の項目に基づいて、マイルストンが動的に作成される",
+      "「エンタイトルメントの管理」権限が有効化されている必要がある",
+      "エンタイトルメントオブジェクトは、組織の共有設定で設定可能である",
+      "エンタイトルメントのバージョン管理により、既存のエンタイトルメントプロセスを変更できる"
+    ],
+    "answer": "B,D",
+    "explanation": "エンタイトルメントプロセスを作成・管理するには、システム管理者のプロファイル等で「エンタイトルメントの管理」権限が付与されている必要があります（B）。また、一度有効化して使用中のプロセスにステップを追加・変更したい場合は「バージョン管理」機能を使用して新しいバージョンを作成します（D）。",
+    "category": "サービス・サポート"
+  },
+  {
+    "question": "コラボレーション売上予測で、マネージャの階層で集計されるのはどの値ですか?２つ選択してください。",
+    "options": [
+      "目標金額",
+      "商談金額",
+      "商品金額",
+      "予想収益"
+    ],
+    "answer": "A,B",
+    "explanation": "コラボレーション売上予測のマネージャー階層ビューでは、部下の「商談金額（B）」の積み上げ集計値と、それに対する「目標金額（Quota）（A）」が集計されて表示され、達成率をトラッキングできます。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "セールスチームは取引先の新しい項目「既存の顧客」の追加を依頼しています。初期値は」いいえ」で、関連する商談が成立した場合は」はい」に変更できます。 システム管理者はこの要件を満たすためにどう対応すればよいでしょうか?",
+    "options": [
+      "積み上げ集計項目として「既存の顧客」を設定して、商談が成立したときに常に再適用する",
+      "商談オブジェクトのワークフロールールを使用して、商談が成立したときに「既存の顧客」項目を設定する",
+      "テキスト項目として「既存の顧客」を設定し、承認プロセスを使用して値を再適用する",
+      "取引先オブジェクトのApex トリガを使用して、商談が成立したときに「既存の顧客」項目を設定する"
+    ],
+    "answer": "B",
+    "explanation": "商談のフェーズ（成立）をトリガーにして、親オブジェクトである取引先の項目（既存の顧客フラグ）を自動更新するには、「クロスオブジェクト項目自動更新」をサポートしている商談のワークフロールール（B）、またはプロセスビルダーなどの自動化ツールを使用します。",
+    "category": "自動化プロセス"
+  },
+  {
+    "question": "組織からメタデータを削除するにはどのリリースツールを使用できますか?２つ選択してください。",
+    "options": [
+      "未管理パッケージ",
+      "Ant移行ツール",
+      "変更セット",
+      "開発者コンソール"
+    ],
+    "answer": "B,D",
+    "explanation": "不要になったメタデータ（カスタム項目やApexクラスなど）を本番環境から一括で削除（Destructive Changes）するには、XMLマニフェストを使用する「Ant移行ツール（またはSalesforce CLI）（B）」を使用するか、手動で1つずつ消す「開発者コンソール等のAPIツール（D）」を使用します。※変更セットは「追加・更新」専用であり削除はできません。",
+    "category": "環境管理・展開"
+  },
+  {
+    "question": "ユニバーサルコンテナ社のセールスオペレーションチームは、商談が成立したときに、カスタム項目の出荷日項目にデータが入力されるようにしたいと考えています。 管理者は、この要件を満たすために Salesforce をどのように構成する必要がありますか?",
+    "options": [
+      "ISBLANK()関数を使用して、商談の入力規則を作成する",
+      "Today()関数を使用して、出荷日にデフォルト値を追加する",
+      "フェーズ項目と出荷日項目の間に依存関係を作成する",
+      "商談のページレイアウトで、出荷日項目を必須にする"
+    ],
+    "answer": "A",
+    "explanation": "「フェーズが成立（Closed Won）になった際、出荷日（Shipping Date）が空欄のままだとエラーにする」という仕組みを作ることでデータ入力を強制できます。これには「ISBLANK()」関数を利用した入力規則（Validation Rule）（A）が使用されます。",
+    "category": "自動化プロセス"
+  },
+  {
+    "question": "エンタープライズテリトリー管理で可能なことはどれですか?２つ選択してください。",
+    "options": [
+      "商談へのアクセス権を、条件ベースで拡張することができる",
+      "モデルごとに20個までテリトリー割り当てルールを使用することができる",
+      "ロール階層による共有は、テリトリー階層による共有に変更される",
+      "テリトリ種別ごとに優先度をつけて、テリトリー種別として最も高い優先度または最も低い優先度を示すことができ"
+    ],
+    "answer": "A,D",
+    "explanation": "エンタープライズテリトリー管理では、Apex等を使用して「商談をテリトリーに割り当てるための条件ベースのフィルターを拡張（A）」したり、テリトリー種別に対して「優先度（D）」を設定して階層をまたいだレポーティングや割り当ての競合解決を行うことが可能です。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "ユニバーサルコンテナ社のマーケティング部門では、マーケティングのカスタムオブジェクトのページレイアウトの要件が定期的に変わります。マーケティング部門VPはシステム管理者にこれらのオブジェクトを設定する権限を与えてくれるように依頼しています。 システム管理はこの要件を満たすためにどう対応すればよいでしょうか?",
+    "options": [
+      "マーケティング部門VPをマーケティングのカスタムオブジェクトの代理管理者として設定する",
+      "マーケティングVPのユーザレコードで「マーケティングユーザ」担限を有効化する",
+      "マーケティングのカスタムオブジェクトに対する「編集」権限を持つカスタムプロファイルを作成し、マーケティング部門VPに割り当てる",
+      "管理者ユーザとしてログインすることをマーケティング部門VPに許可する"
+    ],
+    "answer": "A",
+    "explanation": "システム管理者以外の特定ユーザー（マーケティングVP）に、一部のカスタムオブジェクトの管理権限（レイアウト変更等）を委任するためには、「代理管理者（Delegated Administration）」機能を利用します。",
+    "category": "オブジェクト構成"
+  },
+  {
+    "question": "ユニバーサルコンテナ社のセールスVPから、ユーザーが所有していない商談レコードのフェーズを変更していると報告が来ています。VPは、商談の所有者だけが商談のフェーズを変更できるようにしたいと考えています。組織の共有設定は、“公開/参照・更新可能」に設定されています。 レコード所有者のみがフェーズを編集できるようにするには、どの入力規則の条件数式を使用する必要がありますか?",
+    "options": [
+      "NOT( ISCHANGED( StageName), OwnerlD= $User ID)",
+      "NOT( PRIORVALUE( StageName), OwnerlD= $User ID)",
+      "AND( PRIORVALUE( StageName ), OwnerlD<> $User ID)",
+      "AND( ISCHANGED( StageName ), OwnerlD<> $User ID)"
+    ],
+    "answer": "D",
+    "explanation": "「自分自身が所有者ではない場合に、フェーズ（StageName）を変更させない」という入力規則は、「AND( ISCHANGED( StageName ), OwnerId <> $User.Id )」の記述（D：<>のOCRエラーを含む）で最適に制御できます。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "ユニバーサルコンテナ社では、レコードの割り当てにエンタープライズテリトリー管理を活用しています。各テリトリーに割り当てられているユーザは1人のみです。営業担当があるリードを商談に変換します。このリード所有者は商談が変換された取引先と同じテリトリーに属しています。 商談の割り当てがどのようになると予想されますか？",
+    "options": [
+      "商談が取引先と同じテリトリーに割り当てられ、商談所有者がテリトリーの唯一のメンバーになる",
+      "商談が取引先と同じテリトリーに割り当てられ、リード所有者が商談所有者になる",
+      "商談がテリトリーの売上予測マネージャに割り当てられる",
+      "商談が取引先と同じテリトリーに割り当てられ、リード所有者が商談所有者になる。リード所有者がテリトリーの無効のメンバーとして追加される。"
+    ],
+    "answer": "B",
+    "explanation": "エンタープライズテリトリー管理において、テリトリー内のユーザーがリードを取引先/商談に変換した場合、生成された商談は取引先と同じテリトリーを引き継ぎ、リードの所有者がそのまま商談の所有者となります。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "ユニバーサルコンテナ社では、大規模商談が成立したときにセールス部門 VP にメールアラートを送信するワークフロールールを設定しています。VP は、これらのメールが配信されていないと報告しています。 どのツールを使用すると、この問題を特定できますか？２つ選択してください。",
+    "options": [
+      "メールログ",
+      "システム変更履歴",
+      "ワークフローモニタ",
+      "デバッグログ"
+    ],
+    "answer": "A,D",
+    "explanation": "自動化されたメールアラートが送信されたかどうかのリアルタイムの実行履歴やエラーを確認するには「デバッグログ（D）」を、Salesforceサーバーから実際にメールが送信されたかの痕跡を追うには「メールログ（A）」を確認します。",
+    "category": "自動化プロセス"
+  },
+  {
+    "question": "Northern Trail Outfitters では、テリトリーの商談への割り当てを自動化したいと考えています。 この要件を満たすために必要な機能はどれですか？２つ選択してください。",
+    "options": [
+      "商談所有者に基づく共有を有効にする",
+      "割り当てルールを作成する",
+      "Apexクラスを作成する",
+      "検索条件に基づく商談テリトリーの割り当てを有効にする"
+    ],
+    "answer": "B,D",
+    "explanation": "テリトリー管理で商談を自動的にテリトリーに割り当てるには、標準の取引先に対する「割り当てルール（B）」に加え、設定から「検索条件に基づく商談テリトリーの割り当て（フィルターベースの商談割り当て）（D）」を有効にする必要があります。（これを実現するには内部的にApexが必要な場合があります）",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "システム管理者に、ソフトウェア商品を伴う商談とは別に、ハードウェア商品の商談の売上予測をユーザが表示できるようにして欲しいという依頼がありました。ユーザはハードウェア販売とソフトウェア販売に異なる目標を設定できます。 この要件を満たすためには、システム管理者が何を基準に商品を整理すべきですか？",
+    "options": [
+      "商品名",
+      "商品ファミリ",
+      "商品スケジュール",
+      "商品品目"
+    ],
+    "answer": "B",
+    "explanation": "商品の種類ごと（ソフトウェアやハードウェア等）に個別の売上予測や目標を管理したい場合は、標準機能である「商品ファミリ（Product Family）」ごとに売上予測を表示するオプションを使用します。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "Cloud Kicks のシステム管理者に、古い承認プロセスをクリーンアップして欲しいという依頼がありました。システム管理者が削除できないプロセスが１つあります。 このプロセスを削除できない原因と考えられるものはどれですか？２つ選択してください。",
+    "options": [
+      "[管理レポート] フォルダにレポートがある",
+      "ごみ箱に未承認の申請がある",
+      "プロセスが有効とマークされている",
+      "プロセスが無効とマークされている"
+    ],
+    "answer": "B,C",
+    "explanation": "承認プロセスを削除できない理由として、現在そのプロセスが「稼働中（有効）である（C）」ことや、ごみ箱内を含めてまだ完了（承認/却下）していない「未処理の申請レコードが存在する（B）」ことが挙げられます。",
+    "category": "自動化プロセス"
+  },
+  {
+    "question": "カスタマーコミュニティのメンバーに関する正しい記述はどれですか？２つ選択してください。",
+    "options": [
+      "アイデアタブを使用して、アイデアを投稿、コメント、および投票する",
+      "社内のコミュニティに所属していて、Chatterコラボレーションに参加する必要がある",
+      "評価レベルは所属するコミュニティ全体で同じである必要がある",
+      "サポートの問題を解決するために、クラウドソースされたアンサーとナレッジ記事を検索してみつける"
+    ],
+    "answer": "A,D",
+    "explanation": "カスタマー（顧客）コミュニティライセンスに基づくユーザーは限定的な機能しか持ちませんが、「アイデアへの投稿・投票（A）」や「ナレッジ記事の検索・閲覧（D）」の利用は標準でサポートされています。",
+    "category": "サービス・サポート"
+  },
+  {
+    "question": "Universal Containers には、最上位のお客様を対象とする「特上」サポートレベルがあります。 ケースが作成されてからサービス契約に指定された期限が切れるまでの残り時間をエージェントが表示できるようにするにはどうすべきですか？",
+    "options": [
+      "連続的なマイルストンを作成する",
+      "独立したマイルストンを割り当てる",
+      "[マイルストン] 数式項目を追加する",
+      "マイルストントラッカーコンポーネントを追加する"
+    ],
+    "answer": "D",
+    "explanation": "エンタイトルメントで設定したSLA（解決までの対応時間など）が切れるまでの制限時間を、カウントダウンタイマーとしてケース画面上に表示させるには「マイルストントラッカー」コンポーネントをレイアウトに配置します。",
+    "category": "サービス・サポート"
+  },
+  {
+    "question": "Cloud Kicks のシステム管理者が Full Sandbox環境で画面に基づくリード評価フローを作成してテストし、そのフローを本番にリリースしました。 リリースされたフローを使用できるようにするための操作はどれですか？２つ選択してください。",
+    "options": [
+      "無効のフローを手動で有効にする",
+      "フローの他のバージョンを無効にする",
+      "ユーザインターフェースでApex ジョブを有効にする",
+      "プロセスとフローを有効としてリリースする"
+    ],
+    "answer": "A,D",
+    "explanation": "フローを変更セット等でリリースした際、デフォルトでは無効状態でリリースされるため本番で「手動で有効化する（A）」必要があります。あるいは、リリースツールの設定で「プロセスとフローを有効としてリリースする（D）」機能をオンにしておくことで対応可能です。（元のサイトのCは誤りです）",
+    "category": "環境管理・展開"
+  },
+  {
+    "question": "Cloud Kicks では、ユーザ権限を割り当てることはできるが、変更はできない補助的なシステム管理者を決めておきたいと考えています。 どのような方法で実施すべきですか？",
+    "options": [
+      "システム管理者権限セットグループを作成する",
+      "そのユーザをシステム管理者プロファイルに割り当てる",
+      "そのユーザを代理管理者として設定する",
+      "カスタムのシステム管理者プロファイルを設定する"
+    ],
+    "answer": "C",
+    "explanation": "特定のユーザーグループへのパスワードリセットやユーザー作成等は許可しつつ、プロファイル自体の設定変更などの強力な全体権限を与えずに部分的な管理権限のみを「委任」できるのが「代理管理者（C）」です。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "Cloud Kicks (CK) は先日、営業サイクルの正確性と効率性を最適化する目的で、コラボレーション売上予測の導入を決定しました。CK の予測営業マネージャは、予測金額に現在のバイブラインが正しく反映されていない場合、スーパーバイザとその部下がこの金額を変更できるようにしたいと考えています。 この要件を満たすために有効化すべき設定はどれですか？２つ選択してください。",
+    "options": [
+      "所有者による調整",
+      "収益調整",
+      "支払調整",
+      "マネージャによる調整"
+    ],
+    "answer": "A,D",
+    "explanation": "コラボレーション売上予測において、商談の実際の金額を変えずに予測金額だけを調整可能にするには、「所有者による調整（自分が自身の金額を調整）(A)」と「マネージャによる調整（上司が部下の金額を調整）(D)」を有効にします。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "リードを既存の取引先に変換すると、ユーザに必要な権限がないというエラーが表示されます。 ユーザがリードを既存の取引先に変換できない原因と考えられるものはどれですか？２つ選択してください。",
+    "options": [
+      "取引先の所有者がロール階層の上位のユーザである",
+      "取引先の所有者が同じロールのユーザである",
+      "取引先と取引先責任者に対する組織の共有設定が[非公開]になっている",
+      "取引先と取引先責任者に対する組織の共有設定が[親レコードに連動]になっている"
+    ],
+    "answer": "C,D",
+    "explanation": "リードの変換先として既存の取引先を指定する際、組織の共有設定が「非公開」等になっており、その取引先の参照・更新（編集）アクセス権をそもそも持っていないユーザー（ロールが下など）は変換がエラーになります。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "Cloud Kicks には、機密データを適切なユーザにのみ表示するという要件があります。ユーザオブジェクトの[Salary (給与)]項目の金額については、HR プロファイルが適用されたユーザがユーザレコードを表示している場合にのみデータを表示する必要があります。ユーザレコードを表示している他のユーザには、[Salary (給与)]項目に「Confidential (守秘情報)」というテキストが表示されるようにします。 この要件を満たすためにシステム管理者が使用すべきものはどれですか？",
+    "options": [
+      "数式項目",
+      "入力規則",
+      "プロセスビルダー",
+      "ページレイアウト"
+    ],
+    "answer": "A",
+    "explanation": "特定のプロファイル（HR）が閲覧している場合のみ金額を表示し、その他のユーザーには「Confidential」というテキストを見せるようにするには、プロファイルを判定して出力（TEXTや文字列）を分ける「数式項目（A）」を代替の表示項目として作成するのが適しています。",
+    "category": "データ管理と分析"
+  },
+  {
+    "question": "ユニバーサルコンテナ社では、商品に関連するカスタムプロセスを実装しました。「ドラフト商品」というカスタムオブジェクトがあります。ドラフト商品が承認されたら、自動化により新しい商品レコードを作成し、元のドラフト商品のレコードを削除する必要があります。 この要件を満たすオプションはどれですか？２つ選択してください。",
+    "options": [
+      "フローを呼び出すプロセスビルダー",
+      "プロセスビルダーを呼び出すフロー",
+      "Apex を呼び出すプロセスビルダー",
+      "ワークフロールールを呼び出すプロセスビルダー"
+    ],
+    "answer": "A,C",
+    "explanation": "プロセスビルダー（Process Builder）単体では、レコードの「削除」アクションをサポートしていません。そのため削除を実行するには、プロセスビルダーから「フローを呼び出す（A）」か、「Apexを呼び出す（C）」機構として実装する必要があります。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "セールスマネージャはセールスチームが所有する商談を編集したいと考えています。マネージャは商談オブジェクトに対する「編集」アクセス権を持っていません。 適切な対応方法はどれですか？",
+    "options": [
+      "商談の編集権限を設定したセットを作成し、それをユーザレコードに関連づける",
+      "「階層を使用したアクセス許可」を有効化してロール階層を再定義する",
+      "商談オブジェクトのチームセリングに「参照・更新」 アクセス権を与える",
+      "商談の組織の共有設定を「公開/参照・更新可能」に変更する"
+    ],
+    "answer": "A",
+    "explanation": "重大な誤答（B）の修正です。「オブジェクトレベルの権限（CRUD）」が欠落している場合、共有設定やロール階層を開放してもシステム上一切編集できません。これを解決するには、商談オブジェクトに「編集」権限を付与した権限セットやプロファイル設定を適用する（A）必要があります。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "Ursa Major Solar のお客様は、契約したサービスに基づいて2つのレベルのサポートを利用できます。ゴールドレベルのお客様は、2日以内にメールやチャットによるサポートを受けることができます。プラチナレベルのお客様は、2時間以内に電話やチヤットによる24時間サポートを受けることができます。 該当するサービスレベルの期限内にサポートエージェントが確実に対応するために、システム管理者が設定すべきものはどれですか？",
+    "options": [
+      "エンタイトルメントプロセス",
+      "割り当てルール",
+      "オムニチャネル",
+      "エスカレーションルール"
+    ],
+    "answer": "A",
+    "explanation": "取引先ごとのサポートランク（ゴールド、プラチナなど）に応じて異なるSLA期限（2日以内、2時間以内など）を自動制御し担当者へ通知・徹底するには「エンタイトルメントプロセス」を使用します。",
+    "category": "サービス・サポート"
+  },
+  {
+    "question": "Cloud Kicks のシステム管理者が Sandbox で新しい Shoe (シューズ) オブジェクトを作成し、Laces (靴ひも) と Finish (仕上がり)という2つのカスタム項目を設定しました。そして、このカスタムオブジェクト全体をSandbox から本番インスタンスにリリースする準備をしています。 このカスタムオブジェクトを本番に適切にリリースするために、システム管理者が実行すべきことは何ですか？",
+    "options": [
+      "カスタムオブジェクトをリリースし、カスタム項目を手動で作成し直す",
+      "本番でカスタムオブジェクトとカスタム項目を手動で作成する",
+      "カスタムオブジェクトを変更セットに含める",
+      "カスタムオブジェクトとカスタム項目を変更セットに追加する"
+    ],
+    "answer": "D",
+    "explanation": "変更セットを使用してカスタムオブジェクトをリリースする際、オブジェクト自体を含めてもカスタム項目は自動的には追加されません。必要なカスタム項目もすべて「手動で」変更セットに追加する（D）必要があります。",
+    "category": "オブジェクト構成"
+  },
+  {
+    "question": "ユニバーサルコンテナ社では、取引先オブジェクトの地域と地区の間に選択リストの連動関係を設定しました。ユーザが地域を選択した場合ににも地区も選択必須となるようにしてほしいとマネージャから依頼されました。 これを実現するにはどうすればよいでしょうか？",
+    "options": [
+      "ページレイアウトで地区項目を必須にする",
+      "両方の選択リスト項目を項目レベルで必須にする",
+      "ISBLANK() を使用した入力規則を作成する",
+      "両方の選択リスト項目にデフォルト値を設定する"
+    ],
+    "answer": "C",
+    "explanation": "連動選択リストにおいて「親（地域）が選ばれた時は、子（地区）も必ず選択しなければならない」という動的な必須チェックは、ISBLANK関数を組み合わせた「入力規則（Validation Rule）(C)」を使用することで実現できます。",
+    "category": "自動化プロセス"
+  },
+  {
+    "question": "ユニバーサルコンテナ社のサポートデスクには、3つの異なるプロファイルがあります。サポート担当VP は、サポートデスクユーザーのプロファイルのみを再割り当てする許可をリクエストしています。 このアクセスはどのように付与しますか？",
+    "options": [
+      "システム管理者プロファイル",
+      "３つのプロファイルに対する代理管理者権限",
+      "ユーザの管理権限を付与したプロファイル",
+      "ユーザの管理権限を付与した権限セット"
+    ],
+    "answer": "B",
+    "explanation": "元の解答（D）は誤りです。Salesforce全体の『全ユーザーの管理権限』を与えずに、一部の特定プロファイル（サポートデスク）のユーザー管理権限だけをそのVPへ付与するには、対象のプロファイル限定で変更を許可できる「代理管理者（Delegated Admin）（B）」を使用するのが正解です。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "営業 VP が Bonus Amount (ボーナス金額) カスタム項目を取引先ごとに集計したレポートを表示したいと考えていますが、集計項目を作成する機能がグレー表示になっています。 カスタムの集計項目を利用するために、システム管理者が調整する必要のあることはどれですか？",
+    "options": [
+      "検索条件ロジックを追加する",
+      "バケット項目を作成する",
+      "データをグループ化する",
+      "列を並び替える"
+    ],
+    "answer": "C",
+    "explanation": "レポートの「カスタム集計項目（Summary Formula）」ボタンがグレーアウトして利用できない場合、そのレポートが表形式のままで「グループ化」されていないことが原因です。行・または列をグループ化する（サマリーなどの形式にする）ことで有効になります。",
+    "category": "データ管理と分析"
+  },
+  {
+    "question": "商談成立時に出荷日項目にデータを入力させたい場合の対応は？",
+    "options": [
+      "ISBLANK()関数を使用して、商談の入力規則を作成する",
+      "商談フェーズの変更時にワークフロールールでデフォルト値を設定する",
+      "ページレイアウトで出荷日項目を必須に設定する",
+      "プロセスビルダーで出荷日が空の場合にエラーを返す"
+    ],
+    "answer": "A,B",
+    "explanation": "`AND(ISPICKVAL(StageName, \"Closed Won\"), ISBLANK(ShippingDate__c))` のような入力規則で商談成立時に出荷日を必須にする。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "商談の所有者だけがフェーズを変更できるようにする入力規則の条件数式は？",
+    "options": [
+      "`AND(ISCHANGED(StageName), $Profile.Name <> \"Sales Manager\")`",
+      "`AND(ISCHANGED(StageName), CreatedById <> $User.Id)`",
+      "`AND(ISCHANGED(StageName), $User.Role <> \"Sales\")`",
+      "`AND(ISCHANGED(StageName), OwnerId <> $User.Id)`"
+    ],
+    "answer": "A,C,D,E",
+    "explanation": "フェーズが変更され、かつ現在のユーザーが所有者でない場合にエラーを表示する。",
+    "category": "データ管理と分析"
+  },
+  {
+    "question": "コラボレーション売上予測で可能なことは？（3つ選択）",
+    "options": [
+      "売上予測階層を自動的にロール階層から独立して作成する",
+      "売上予測分類名を変更する",
+      "カスタムの売上予測期間を12ヶ月を超えて設定する",
+      "商談の分割を使用して予測する",
+      "デフォルトの売上予測通貨設定を選択する"
+    ],
+    "answer": "B,D,E",
+    "explanation": "分類名の変更、商談分割での予測、デフォルト通貨の設定が可能。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "4つの各営業地域VPへ、月曜朝に個別データのダッシュボードを配信する方法は？",
+    "options": [
+      "4つの動的ダッシュボードを作成し、各VPにメールで手動送信する",
+      "各地域を条件に設定したダッシュボードを1つ作成してスケジュール設定する",
+      "4つの個別ダッシュボードを作成し、それぞれにスケジュール設定する",
+      "結合レポートを作成し、レポート実行スナップショットをスケジュールする"
+    ],
+    "answer": "B",
+    "explanation": "",
+    "category": "データ管理と分析"
+  },
+  {
+    "question": "ロールを変更した際、所有者に基づく共有ルールへの影響は？",
+    "options": [
+      "所有者に基づく共有ルールは手動で再適用する必要がある",
+      "所有者に基づく共有ルールは変更されない",
+      "所有者に基づく共有ルールはすべて再適用される",
+      "所有者に基づく共有ルールは削除される"
+    ],
+    "answer": "C",
+    "explanation": "",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "Sandbox環境へ本番ライセンス情報を最小限のインパクトで反映させる方法は？",
+    "options": [
+      "本番ライセンスに一致機能を使用する",
+      "Sandboxを更新（リフレッシュ）する",
+      "ライセンス情報を変更セットでリリースする",
+      "手動でSandboxのライセンスを再設定する"
+    ],
+    "answer": "A",
+    "explanation": "",
+    "category": "環境管理・展開"
+  },
+  {
+    "question": "パートナーコミュニティの考慮事項は？（2つ選択）",
+    "options": [
+      "最大100個のコミュニティ制限にはアクティブ、非アクティブ、プレビューが含まれる",
+      "パートナーコミュニティではカスタムオブジェクトを使用できない",
+      "メンバーベースまたはログインベースのライセンスを選択できる",
+      "パートナーユーザーはレポートとダッシュボードにアクセスできない"
+    ],
+    "answer": "A,C",
+    "explanation": "",
+    "category": "設定と構成"
+  },
+  {
+    "question": "取引先に取引先責任者の数を表示させたい（メールマーケティング用）場合の対応は？",
+    "options": [
+      "取引先に積み上げ集計項目を作成する",
+      "取引先責任者レポートを作成してダッシュボードに表示する",
+      "取引先に数式項目を作成してカウントする",
+      "取引先にカスタム項目を作成し、Apexトリガを使用して追加・削除時に更新する"
+    ],
+    "answer": "A,D",
+    "explanation": "標準の積み上げ集計は取引先と取引先責任者間では使用不可のためApexが必要。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "Salesforceコンソールのチャット機能で正しいのは？（3つ選択）",
+    "options": [
+      "ナレッジ記事検索に記事ツールを使用できる",
+      "訪問者情報を詳細タブで参照できる",
+      "チャットを別のエージェントに転送できる",
+      "チャットセッション中にケースを自動的に作成できない",
+      "チャットの会話記録はケースに添付できない"
+    ],
+    "answer": "A,B,C",
+    "explanation": "",
+    "category": "サービス・サポート"
+  },
+  {
+    "question": "ケースとバグを関連付け、バグ作成にはケースが必須となるリレーションは？",
+    "options": [
+      "参照関係",
+      "階層関係",
+      "主従関係",
+      "外部参照関係"
+    ],
+    "answer": "C",
+    "explanation": "主従関係では親レコード（ケース）が必須になる。",
+    "category": "サービス・サポート"
+  },
+  {
+    "question": "売上予測金額をマネージャとその部下が変更できるようにするための設定は？（2つ選択）",
+    "options": [
+      "所有者による調整",
+      "売上予測階層による調整",
+      "商談チームによる調整",
+      "マネージャによる調整"
+    ],
+    "answer": "A,D",
+    "explanation": "所有者による調整とマネージャによる調整を有効にする。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "特定レコード保存時のApexトリガーエラーの詳細情報を収集する方法は？",
+    "options": [
+      "ワークフロールールのデバッグオプションを有効にする",
+      "ユーザーに対するデバッグログを有効にする",
+      "メールログを確認する",
+      "設定変更履歴を確認する"
+    ],
+    "answer": "B",
+    "explanation": "",
+    "category": "設定と構成"
+  },
+  {
+    "question": "特定アプリケーションへのアクセスを許可するために使用すべき機能は？",
+    "options": [
+      "プロファイルベースのアクセス制御",
+      "ログインフローによる制限",
+      "セッションベースの権限セット",
+      "IPアドレス制限付きのプロファイル"
+    ],
+    "answer": "C",
+    "explanation": "セッションベースで有効化される権限セットで、特定のセッション中のみアクセスを付与。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "営業担当が売上予測に含まれていない場合のトラブルシューティングは？",
+    "options": [
+      "売上予測階層にユーザーのロールを追加する",
+      "ユーザの一般情報の下にある「売上予測を許可」をオンにする",
+      "ユーザーのプロファイルに売上予測タブへのアクセスを追加する",
+      "売上予測の共有設定を「公開」に変更する"
+    ],
+    "answer": "B",
+    "explanation": "",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "特定のプロファイルには給与を表示し、他には「守秘情報」と表示させたい場合の方法は？",
+    "options": [
+      "数式項目",
+      "項目レベルセキュリティ",
+      "ページレイアウト",
+      "レコードタイプ"
+    ],
+    "answer": "A",
+    "explanation": "`IF($Profile.Name = \"HR Manager\", Salary__c, \"守秘情報\")` のような数式項目で制御。",
+    "category": "データ管理と分析"
+  },
+  {
+    "question": "承認後に自動で新レコード作成と旧レコード削除を行うオプションは？（2つ選択）",
+    "options": [
+      "フローを呼び出すプロセスビルダー",
+      "承認プロセスの最終承認アクションに項目自動更新を追加する",
+      "Apexを呼び出すプロセスビルダー",
+      "承認後にワークフロールールでメール通知を送信する"
+    ],
+    "answer": "A,C",
+    "explanation": "",
+    "category": "設定と構成"
+  },
+  {
+    "question": "編集アクセス権がないマネージャに商談チーム所有の商談を編集させる方法は？",
+    "options": [
+      "マネージャを商談チームのメンバーとして追加する",
+      "「階層を使用したアクセス許可」を有効化してロール階層を再定義する",
+      "商談の共有設定を「公開/参照・更新可能」に変更する",
+      "マネージャのプロファイルに「すべてのデータの編集」権限を付与する"
+    ],
+    "answer": "B",
+    "explanation": "",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "特定レコードタイプへのアクセスを、プロファイルが異なる5人のユーザに制限する方法は？",
+    "options": [
+      "各ユーザーのプロファイルにレコードタイプを割り当てる",
+      "権限セットを作成してレコードタイプへのアクセスを付与する",
+      "公開グループを作成し、基準に基づく共有ルールを使用して共有する",
+      "ロール階層を使用してアクセスを制御する"
+    ],
+    "answer": "C",
+    "explanation": "",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "リストビューには重複があるが、コンポーネントに表示されない場合の改善策は？",
+    "options": [
+      "重複ジョブ",
+      "重複ルールを再有効化する",
+      "一致ルールを更新する",
+      "レポートで重複を検出する"
+    ],
+    "answer": "A",
+    "explanation": "重複ジョブを実行して既存レコードの重複をスキャンし、コンポーネントに反映させる。",
+    "category": "データ管理と分析"
+  },
+  {
+    "question": "リード状況変更の所要時間を報告し、クリック数を減らしたい場合の方法は？",
+    "options": [
+      "リード状況項目の項目履歴管理を有効にして、その項目に基づいてレポートを作成する",
+      "カスタムの日時項目を作成し、ワークフロールールで更新する",
+      "Apexバッチジョブでリードの状況変更時間を計算する",
+      "プロセスビルダーで状況変更ごとにログレコードを作成する"
+    ],
+    "answer": "A",
+    "explanation": "",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "カスタムオブジェクトに他の同じオブジェクトのレコードを参照する項目を追加したい場合の方法は？",
+    "options": [
+      "主従関係",
+      "外部参照関係",
+      "連結関係（自己参照）",
+      "階層関係"
+    ],
+    "answer": "C",
+    "explanation": "",
+    "category": "オブジェクト構成"
+  },
+  {
+    "question": "申込がないすべての募集職種を示すレポートの作成方法は？",
+    "options": [
+      "募集職種と申込のカスタムレポートタイプを作成し、左外部結合を使用する",
+      "募集職種と申込の結合レポートを作成する",
+      "申込レポートで募集職種ごとにグループ化し、カウントが0の項目を表示する",
+      "クロス条件付きの標準の募集職種レポートタイプを使用する"
+    ],
+    "answer": "D",
+    "explanation": "",
+    "category": "データ管理と分析"
+  },
+  {
+    "question": "各求人情報への申込数を計算するためのノーコードソリューションで作成すべきフィールドは？",
+    "options": [
+      "数式項目",
+      "参照関係",
+      "ワークフロールールによるカウント項目",
+      "主従関係"
+    ],
+    "answer": "D",
+    "explanation": "主従関係を作成することで親オブジェクトに積み上げ集計項目（COUNT）を設定可能。",
+    "category": "オブジェクト構成"
+  },
+  {
+    "question": "特定プロファイルのみ再割り当てする許可を与える方法は？",
+    "options": [
+      "プロファイルに「すべてのデータの編集」権限を追加する",
+      "代理管理者として設定する",
+      "カスタムの承認プロセスを作成する",
+      "ユーザの管理権限を付与した権限セット"
+    ],
+    "answer": "D",
+    "explanation": "",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "レポートで集計項目を作成する機能がグレー表示されている場合の調整は？",
+    "options": [
+      "レポートの種類をマトリックスレポートに変更する",
+      "レポートに項目を追加する",
+      "データをグループ化する",
+      "レポートの実行権限を確認する"
+    ],
+    "answer": "C",
+    "explanation": "集計項目はレポートがグループ化（サマリーまたはマトリックス形式）されている場合にのみ使用可能。",
+    "category": "データ管理と分析"
+  },
+  {
+    "question": "商談、取引先、関連ケースをダッシュボードに表示する適切な方法は？",
+    "options": [
+      "動的ダッシュボードを作成し、VPが「私のチームのダッシュボードの参照」権限を持つようにする",
+      "結合レポートを使用してすべてのデータを1つのレポートに統合する",
+      "各オブジェクトごとに別々のダッシュボードを作成する",
+      "ダッシュボードを作成し、ユーザ、商談、取引先、およびケースの条件を追加する"
+    ],
+    "answer": "A",
+    "explanation": "",
+    "category": "データ管理と分析"
+  },
+  {
+    "question": "カスタムオブジェクトとカスタム項目をSandboxから本番へリリースする方法は？",
+    "options": [
+      "データローダを使用してメタデータをエクスポートし、本番にインポートする",
+      "Ant移行ツールを使用してメタデータを移行する",
+      "手動で本番環境にカスタムオブジェクトを再作成する",
+      "カスタムオブジェクトとカスタム項目を変更セットに追加する"
+    ],
+    "answer": "D",
+    "explanation": "",
+    "category": "環境管理・展開"
+  },
+  {
+    "question": "昨年成立した商談が1件もない取引先のレポートを作成する方法は？",
+    "options": [
+      "取引先と商談のカスタムレポートタイプを作成し、外部結合を使用する",
+      "商談レポートで取引先ごとにグループ化し、フィルタリングする",
+      "取引先レポートタイプを使用し、商談を使用したクロス条件を追加する",
+      "結合レポートで取引先と商談を表示する"
+    ],
+    "answer": "C",
+    "explanation": "クロス条件で「商談が存在しない」条件を設定。",
+    "category": "営業・マーケティング"
+  }
+];
+</script>
+    <script>const testData = [
+  {
+    "question": "営業マネージャは、成立した商談が昨年1件もない取引先のレポートがほしいと考えています。 この要件はどのようにして満たせますか？",
+    "options": [
+      "取引先レポートタイプを使用して表形式レポートを作成し、商談を使用したクロス条件を追加する",
+      "商談がない取引先のカスタムレポートタイプを作成する",
+      "取引先レポートタイプと商談レポートタイプを使用して結合レポートを作成する",
+      "取引先レポートタイプと、商談数を計算する数式項目を使用して、サマリーレポートを作成する"
+    ],
+    "answer": "A",
+    "explanation": "「商談がない（WITHOUT）取引先」を抽出するには、取引先レポートを利用し、「クロス条件（関連なし）」を追加するのが正しいアプローチです。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "ユニバーサルコンテナ社では、商談が「交渉/レビュー」または」成立」のフェーズで、各レコードに次の商談項目が存在するようにしたいと考えています。・金額(通貨)が入力されている・クローズ準備完了(チェックボックス)がTrue(チェックされている)\n\nこれらの要件を満たすために、管理者はどの入力規則のエラー条件数式を構成する必要がありますか？",
+    "options": [
+      "AND(OR(StageName = “Negotiation/Review」, StageName = “Closed Won」),OR(ISBLANK( Amount ),Ready_to_close__C=TRUE))",
+      "AND(OR(StageName = “Megotiation/Review」, StageName = “Closed Won」),OR(ISBLANK( Amount ), Ready_to_close__c=FALSE))",
+      "AND(OR(ISPICKVAL(StageName “Negotiation/Review」), ISPICKVAL(StageName, “Closed Won」)), OR(ISBLANK( Amount), Ready_to_close__c = FALSE))",
+      "AND(OR(ISPICKVAL( StageName, “Negotiation/Review」), ISPICKVAL(StageName, “Closed Won」)),OR(NOT(ISBLANK( Amount)) Ready_to_close__c= TRUE))"
+    ],
+    "answer": "C",
+    "explanation": "入力規則は「保存をブロックする（エラーになる）条件」です。フェーズが該当するときに、「金額が空である」もしくは「クローズ準備がオフ」の場合にエラーを出すので、Cの数式（ANDとORの組み合わせ）が正解です。",
+    "category": "自動化プロセス"
+  },
+  {
+    "question": "ユニバーサルコンテナ社では、Developer Sandbox で新しい承認プロセスを作成してテストしました。承認ルートは正しいものの、承認者は通知メールを受信していませんでした。 この問題の原因は何ですか？",
+    "options": [
+      "メールの送信設定は Sandbox では変更できない",
+      "承認は、Fun または Partial Copy Sandbox でのみテストできる",
+      "Sandbox でメールリレーが無効になっている",
+      "Sandbox 内のユーザーのメールアドレスが無効になっている"
+    ],
+    "answer": "D",
+    "explanation": "Sandbox環境更新時、全ユーザーのメールアドレス末尾に「.invalid」が付与され無効化されます。テストメールを受信するにはユーザーのメールアドレスを手動で修正する必要があります。",
+    "category": "環境管理・展開"
+  },
+  {
+    "question": "ユニバーサルコンテナ社は、Sandbox 内で取引先オブジェクトにいくつかの新しい項目と、ページレイアウトに新しいセクションを作成しました。テスト後に、管理者はSandbox から本番環境に新しい項目を含む変更セットを作成してアップロードしました。残念ながら、管理者はページレイアウトを追加するのを忘れました。 管理者がページレイアウトをリリースするために取ることができるオプションはどれですか？２つ選択してください。",
+    "options": [
+      "変更セットをリリースする前に、本番環境で変更セットを編集して、新しいページレイアウトを追加する",
+      "Sandbox内の既存の変更セットにページレイアウトを追加し、変更セットを再度アップロードする",
+      "既存の変更セットをリリースし、ページレイアウトを含む新しい変更セットを作成してリリースする",
+      "Sandbox に作成した変更セットをコピーし、それに新しいページレイアウトを追加して、本番環境にアップロードする"
+    ],
+    "answer": "C,D",
+    "explanation": "一度アップロードした変更セットは編集できません。新しい変更セットを作ってレイアウトのみ送る（C）か、既存の変更セットをコピー（Clone）してレイアウトを追加し再アップロードする（D）しかありません。",
+    "category": "環境管理・展開"
+  },
+  {
+    "question": "ミュート権限セットで削除権限を選択したとき、自動的にミュートされるほかの権限はどれですか？",
+    "options": [
+      "すべてのレコードの参照",
+      "すべてのレコードの編集",
+      "すべてのデータの編集",
+      "すべてのデータの参照"
+    ],
+    "answer": "B",
+    "explanation": "「すべてのデータの編集（Modify All）」等の強力な権限は暗黙的に削除権限を持ちます。そのため削除権限をミュートすると、整合性を保つため自動的に「すべてのレコードの編集」もミュートされます。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "ユニバーサルコンテナ社は、コミュニティの訪問者がコミュニティにログインせずにサポートケースを送信できるようにしたいと考えています。 このリクエストを実装するために必要な２つの機能はどれですか？",
+    "options": [
+      "ケースの割り当てルール",
+      "ケースのクイックアクション",
+      "Web-to-ケース",
+      "ケースフィードアクション"
+    ],
+    "answer": "B,C",
+    "explanation": "ご指摘の通りです！素晴らしいご推察ありがとうございます。コミュニティ（Experience Cloud）上でゲストユーザーがログインせずにケースを作成できるようにするには、組織の「Web-to-ケース（C）」機能が有効化されている必要があり、さらに画面上に表示するフォームの定義として「ケースのクイックアクション（B）」を作成してコンポーネントに割り当てる必要があります。割り当てルールは自動化には便利ですが、ケース送信機能自体の実装要件としてはBとCが必須となります。",
+    "category": "サービス・サポート"
+  },
+  {
+    "question": "ユニバーサルコンテナ社は、取引先に非公開の共有モデルを使用しています。ユーザー A はユーザーBのチームに配属され、同じプロファイルとロールを付与されています。それぞれのユーザーは、20 件のアカウントを所有していますが、ユーザーBは40 件のアカウントを表示できます。一方、ユーザーA は、20件のアカウントしか表示できません。 考えられる理由は何ですか？２つ選択してください。",
+    "options": [
+      "ユーザー Bは、それらのレコードにアクセス可能な共有ルールのメンバーになっている",
+      "ユーザー Bは、それらのレコードに対する手動共有が設定されている",
+      "ユーザー B は、権限セットを介してそれらのレコードにアクセス可能になっている",
+      "ユーザー B は、それらのレコードにアクセス可能なキューのメンバーになっている"
+    ],
+    "answer": "A,B",
+    "explanation": "非公開モデルで同じプロファイル・ロール階層なのにアクセスできるレコード数が異なる場合、「共有ルール（A）」や「手動共有（B）」により所有外レコードのアクセス権が付与されていることが原因です。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "商品を商談に追加しているユーザが、お客様に適した価格を表示する価格表を選択しようとしています。数種類の価格表にアクセスできるはずですが、価格表を選択するオプションが表示されません。 この問題を解決するために、システム管理者が実行すべきことは何ですか？",
+    "options": [
+      "商談レイアウトの[詳細]セクションに[価格表を選択]ボタンを追加する",
+      "商品レイアウトの[詳細]セクションに[価格表を選択]ボタンを追加する",
+      "Lightning ページに[価格表を選択] ボタンを追加する",
+      "商談レイアウトの[商品] 関連リストに[価格表を選択] ボタンを追加する"
+    ],
+    "answer": "D",
+    "explanation": "商談に商品を追加する際、価格表（Price Book）を選択させるには、商談ページの「商品（Products）」関連リスト上に「価格表の選択（Choose Price Book）」ボタンを表示させておく必要があります。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "ユニバーサルコンテナ社は、あるユーザーが他のユーザーとしてログインし、承認なしに取引先オブジェクトを編集していると疑っています。 管理者は、他のユーザーとして誰がログインしているかを確認するためにどの設定を行いますか？",
+    "options": [
+      "デバッグログ",
+      "設定変更履歴",
+      "取引先の項目履歴管理",
+      "ユーザーのログイン履歴"
+    ],
+    "answer": "B",
+    "explanation": "代理ログイン機能（他のユーザーとしてログイン）を使用した記録の追跡には「設定変更履歴（Setup Audit Trail）」を使用します。「誰が・いつ・誰としてログインしたか」というアクションが組織の設定変更履歴にログとして残るため、不正な代理ログインの調査にはBが正解となります。※通常の「ユーザーのログイン履歴」では代理ログインの委任者までは明確に特定しづらいため不正解です。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "システム管理者が見積を設定するときに考慮すべき点はどれですか？２つ選択してください。",
+    "options": [
+      "見積を削除すると、関連する商談や商品も削除される",
+      "見積を複数の有効な見積と同期できる",
+      "商談の見積を作成する前に、商談の価格表が有効になっている必要がある",
+      "見積 PDFのテキストは、ページに右揃えではなく、左揃えになる"
+    ],
+    "answer": "C,D",
+    "explanation": "見積を作成するためには商談に有効な「価格表」が設定されている必要があります（C）。また、標準の見積PDF機能ではテキストの右揃え等は対応できず標準で左・中央揃えになります（D）。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "ユーザーから、特定の取引先レコードを保存しようとすると、Apexトリガーエラーが発生するという報告を受けています。 管理者は、そのレコードの処理に関する詳細情報報をどのように収集できますか？",
+    "options": [
+      "設定変更履歴を確認する",
+      "ユーザーに対するデバッグログを有効にする",
+      "Apexトリガーに対するデバッグログを有効にする",
+      "障害コネクタを使用してフローを作成する"
+    ],
+    "answer": "B",
+    "explanation": "特定のユーザーでApexトリガエラーが発生している場合、詳細な原因を追跡するには、設定のデバッグログ画面から対象のユーザーに対する「ユーザー追跡フラグ」を有効にします。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "ユニバーサルコンテナ社は、求人情報カスタムオブジェクトに関連する申込カスタムオブジェクトを作成したいと考えています。 また、各求人情報への申込数を計算するためのノーコードソリューションも必要です。 この機能を有効にするには、管理者が申込オブジェクトにどのタイプのフィールドを作構成する必要がありますか？",
+    "options": [
+      "主従関係",
+      "参照関係",
+      "積み上げ集計",
+      "数式"
+    ],
+    "answer": "A",
+    "explanation": "親オブジェクト（募集職種）に子レコード（申込）の件数をノーコードで自動計算（積み上げ集計）させるには、2つのオブジェクトが「主従関係（Master-Detail）」である必要があります。",
+    "category": "オブジェクト構成"
+  },
+  {
+    "question": "Cloud Kicks (OK) には、「今月のスニーカー」という商品があり、$1,000 の年間サブスクリプションとして販売しています。 この情報を正確にキャプチャするために、CK のシステム管理者が設定すべき商品スケジュールの種類はどれですか？",
+    "options": [
+      "収益スケジュールのみ",
+      "数量スケジュールのみ",
+      "インバウンドスケジュール",
+      "数量スケジュールと収益スケジュール"
+    ],
+    "answer": "A",
+    "explanation": "総額が一度決まっており、それを複数回（時間経過）に分けて計上（分割請求）する定額サブスクリプションのような販売モデルでは「収益スケジュール（Revenue Schedule）」を使用します。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "コラボレーション売上予測を使用する際、セールス担当者が売上予測タブからアクセスできる情報にはどのようなものがありますか？２つ選択してください。",
+    "options": [
+      "同じチームの他の担当者の売上予測金額",
+      "売上予測分類ごとの売上予測金額",
+      "商談フェーズごとの売上予測金額",
+      "各売上予測金額を構成する商談"
+    ],
+    "answer": "B,D",
+    "explanation": "コラボレーション売上予測（Collaborative Forecasts）のタブでは、現在の売上予測が「売上予測分類ごと（Best Case, Pipelineなど）」に分割された金額として表示され（B）、さらにその金額をクリックすることで、元になっている個々の商談一覧（D）をドリルダウンして確認することができます。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "Developer Edition 組織から他の組織にメタデータをリリースするにはどのリリースツールを使用できますか？２つ選択してください。",
+    "options": [
+      "変更セット",
+      "Visual Studio Code 向け Salesforce 拡張機能",
+      "データローダ",
+      "Ant移行ツール"
+    ],
+    "answer": "B,D",
+    "explanation": "Developer Editionなどのサンドボックスと紐づかない独立した組織間では「変更セット」が使えません。代わりにVS CodeのSalesforce拡張機能（B）やAnt移行ツール・CLI（D）などのAPIツールを使います。",
+    "category": "環境管理・展開"
+  },
+  {
+    "question": "Cloud Kicks の営業担当が、Salesforce の取引先リストビューによく似た取引先レコードがあることに気が付きましたが、Lightning の取引先レコードページの潜在的な重複コンポーネントには重複候補が1つも表示されていません。 潜在的な重複コンポーネントの出力を向上させるために、システム管理者がカスタマイズすべきものはどれですか？",
+    "options": [
+      "重複ジョブ",
+      "重複ルール",
+      "重複レコードセット",
+      "重複レポート"
+    ],
+    "answer": "B",
+    "explanation": "Lightningページの「潜在的な重複コンポーネント」にアラートを表示させるには、裏側で機能している「重複ルール（Duplicate Rule）」のアクション設定で「アラートを表示」が有効になっている必要があります。（元の解答Aは全体スキャンをおこなうジョブのため誤りです）",
+    "category": "データ管理と分析"
+  },
+  {
+    "question": "ユニバーサルコンテナ社には、ジョブポスティングを表す 募集職種 (Position)オブジェクトと、募集職種に応募した人を表す 申込(JobApplication)オブジェクトがあります。申込オブジェクトには、募集職種への参照関係があります。担当者は、申込がないすべての募集職種を示すレポートを実行したいと考えています。 どのソリューションが要件を満たしますか？",
+    "options": [
+      "“募集職種が関連する申込」標準レポートタイプを使用する",
+      "募集職種のない申込のみを表示するカスタムレポートタイプを使用する",
+      "申込のない募集職種のみを表示する標準レポートタイプを使用する",
+      "クロス条件付きの標準の募集職種レポートタイプを使用する"
+    ],
+    "answer": "D",
+    "explanation": "「〇〇を持たない」というネガティブ条件のレコードを抽出・レポートするには、標準のレポートタイプ上で「関連なし（WITHOUT）」のクロス条件を追加するのが正しい方法です。",
+    "category": "データ管理と分析"
+  },
+  {
+    "question": "カテゴリグループ内のナレッジのデータカテゴリをいくつか変更し、階層内のポジションを変更した後、管理者が[保存]をクリックしたときに発生するアクションはどれですか？３つ選択してください。",
+    "options": [
+      "記事の使用履歴がゼロにリセットされる",
+      "ユーザは記事やアンサーを検索する際に、パフォーマンスの問題を感じることがある",
+      "カテゴリー選択リストの値が変更される",
+      "ユーザは記事のアクセスを一時的に拒否される",
+      "ユーザに表示される記事が変更される"
+    ],
+    "answer": "A,C,E",
+    "explanation": "データカテゴリやその階層構造を変更した場合、既存記事のカテゴリ割り当て状態が変化するためユーザーに表示される記事が変わり（E）、カテゴリ選択リストが変更され（C）、さらに過去の「記事の使用履歴」の統計がゼロにリセット（A）される副作用があります。",
+    "category": "サービス・サポート"
+  },
+  {
+    "question": "ユニバーサルコンテナ社では、従業員の年次レビューに必要な情報を格納するため、カスタムオブジェクトを作成しました。従業員が自身のレコードにのみアクセスできるようにする必要があります。管理者は、このオブジェクトに対する組織の共有設定を非公開にしましたが、従業員のマネージャーはメンバーのレコードにアクセスができます。 マネージャによるアクセスをできなくするために、追加となる作業はどれですか？",
+    "options": [
+      "各プロファイルから、カスタムオブジェクトの手動共有のチェックを外す",
+      "マネージャのプロファイルから、カスタムオブジェクトへのアクセス権を取り除く",
+      "共有設定の階層を使用したアクセス許可のチェックを外す",
+      "共有設定から、共有ルールの再適用をする"
+    ],
+    "answer": "C",
+    "explanation": "非公開の共有モデルであっても、デフォルトでは「ロール階層を利用したアクセス権の許可」が有効になっているため上位ロールが見れてしまいます。これを見えなくするには、共有設定の画面で「階層を使用したアクセス許可」のチェックを外す必要があります。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "ユニバーサルコンテナ社のセールスマネージャは、セールス担当者の商談、取引先、および関連ケースをそれぞれダッシュボードに表示したいと考えています。 適切な対応方法はどれですか？",
+    "options": [
+      "動的ダッシュボードを作成し、セールスマネージャが「私のチームのダッシュボードの参照」権限を必ず持つようにする",
+      "商談、取引先、およびケースコンポーネントを使用して、セールス担当者ごとに個別のダッシュボードを作成する",
+      "動的ダッシュボードを作成し、商談、取引先、およびケースの条件を追加する",
+      "ダッシュボードを作成し、ユーザ、商談、取引先、およびケースの条件を追加する"
+    ],
+    "answer": "A",
+    "explanation": "「ログインしている実行ユーザーごと」に自分のデータを動的にフィルタリングして表示する「動的ダッシュボード」を使えば、多数の担当者ごとに個別にダッシュボードを作成する手間を省けます。",
+    "category": "データ管理と分析"
+  },
+  {
+    "question": "マーケティング部門 VP が、進行中の商談がない取引先を対象にしたキャンペーンを開始しようとしています。 システム管理者はこれを手伝うためにどのレポートソリューションを設定できるでしょうか？",
+    "options": [
+      "標準条件",
+      "結合レポート",
+      "レポート作成スナップショット",
+      "クロス条件"
+    ],
+    "answer": "B,D",
+    "explanation": "活動（ToDoや行動）が自動的にアーカイブされる条件として、「終了（期日）から365日経過した行動や完了したToDo（B）」、および「期日が設定されていない状態で作成から365日経過した完了ToDo（D）」があります。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "ユニバーサルコンテナ社には、商談が成立時にセールスオペレーションに活動を割り当てるアクティブなプロセスがあります。セールスオペレーション担当は、その活動が欠落していると報告しています。 管理者が問題を特定するために使用する必要があるツールはどれですか？２つ選択してください。",
+    "options": [
+      "デバッグログ",
+      "メールログ",
+      "時間ベースのワークフローの監視",
+      "一時停止中のフローインタビューリスト"
+    ],
+    "answer": "B,C,D",
+    "explanation": "テリトリーマネージャーは、テリトリー内の取引先に対してフルアクセスを持ちます。その取引先に関連する「商談」に対しては、テリトリー設定にもよりますが一般的に「参照（D）」「編集（B）」「所有者の変更/移行（C）」のアクセス権が付与されます。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "セールス担当の経営幹部は、商談名に取引先名が常に表示されるプロセスの実現を要望しています。 この要件を満たすには自動化はどのように使用できますか？",
+    "options": [
+      "取引先オブジェクトでApex トリガを使用して、取引先名を名に追加する",
+      "新しく作成された商談をデータ品質の確認のために経営幹部に送る承認プロセスを使用する",
+      "取引先名が後ろにつながるように名を更新する、条件に基づくワークフロールールを作成する",
+      "クロスオブジェクト数式を使用し、取引先名を使用して名を更新する入力規則を作成する"
+    ],
+    "answer": "D",
+    "explanation": "取引先と取引先責任者は「参照関係」にあたるため、標準の「積み上げ集計項目」は使用できません。そのため（Flowが選択肢にない旧式の問題の場合）取引先責任者の件数をリアルタイムで取引先へ反映させるには「Apexトリガ（D）」等によるカスタマイズが必要です。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "ユニバーサルコンテナ社では、取引先に関連するフィードバック (Feedback__c) かカスタムオブジェクトを作成し、すべてのフィードバックレコードが取引先所有者と同じユーザーによって所有されてるようにしたいと考えています。 管理者はフィードバックオブジェクトと取引先をどのように関連付ける必要がありますか？",
+    "options": [
+      "階層項目をフィードバックに作成する",
+      "連結オブジェクトを取引先とフィードバックの間に作成する",
+      "主従関係項目をフィードバックに作成する",
+      "参照関係項目をフィードバックに作成する"
+    ],
+    "answer": "C",
+    "explanation": "「子（バグ）を作成するために必ず親（ケース）が必要」という厳しい依存関係（必須関係）を持たせるためのオブジェクトリレーションは「主従関係（Master-Detail）」です。",
+    "category": "オブジェクト構成"
+  },
+  {
+    "question": "ユニバーサルコンテナ社の管理者は、上位５件の顧客の商談と活動を表示する取引先管理ダッシュボードを作成するよう依頼されました。 この要件を満たすために、管理者はどのダッシュボード機能を使用する必要がありますか？",
+    "options": [
+      "ダッシュボードで結合レポートを使用する",
+      "ダッシュボードでマトリックスレポートを使用する",
+      "ダッシュボード検索条件",
+      "動的ダッシュポード"
+    ],
+    "answer": "D",
+    "explanation": "正解はDです。元のサイトのBは不正確です。所有者が部下であってもマネージャーが参照できない場合、取引先責任者の共有設定が「親レコードに連動（Controlled by Parent）」になっており、マネージャーが親である「取引先」へのアクセス権（ロール階層における権限）を持っていないことが原因です。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "記事マネージャが必ず、指定された値をカスタム記事項目に使用するには、システム管理者は何を行えばいいですか？",
+    "options": [
+      "項目の連動関係を使用する",
+      "要件ごとに異なるレコードタイプを作成する",
+      "ページレイアウトで項目を必須にする",
+      "記事の入力規則を作成する"
+    ],
+    "answer": "D",
+    "explanation": "「特定の指定された値のみ」を強制するような厳密なデータ制御を行うためには、単なるページレイアウトの必須設定ではなく、「入力規則（Validation Rule）」を使用するのが最適です。",
+    "category": "サービス・サポート"
+  },
+  {
+    "question": "マイルストン、エンタイトルメントプロセス、およびエンタイトルメントテンプレートを含むエンタイトルメントの管理を設定するには、どの権限が有効化される必要がありますか？２つ選択してください。",
+    "options": [
+      "エンタイトルメントのカスタマイズ",
+      "エンタイトルメントの管理",
+      "アプリケーションのカスタマイズ",
+      "マイルストンの管理"
+    ],
+    "answer": "B,C",
+    "explanation": "エンタイトルメント管理機能全体のセットアップを行うためには、システム管理者に通常付与される「アプリケーションのカスタマイズ」権限と、特有の「エンタイトルメントの管理」権限の両方がプロファイル（または権限セット）で有効である必要があります。",
+    "category": "サービス・サポート"
+  },
+  {
+    "question": "Cloud Kicks のシステム管理者が、新年度の準備の一環として価格表を更新しています。オプションから削除できない価格表が1つあります。 この問題の原因と考えられる設定はどれですか？２つ選択してください。",
+    "options": [
+      "価格表が無効になっている",
+      "価格表に待機中のワークフローアクションがある",
+      "価格表が承認プロセスに関連付けられている",
+      "価格表がアーカイブされている"
+    ],
+    "answer": "B,C",
+    "explanation": "レコードが「待機中の時間ベースのワークフローにキューイングされている（B）」場合や、「承認プロセスの最中（ロック状態）（C）」になっている場合は、システム的に削除がブロックされます。",
+    "category": "自動化プロセス"
+  },
+  {
+    "question": "ユニバーサルコンテナ社は、メール通知と承認プロセスを使用して、管理プロセスを合理化します。代理承認者を許可する新しい承認プロセスが作成されました。テストでは、プライマリの承認者がメール通知を受信しましたが、代理承認者は受信していないことが判明しました。 管理者がトラブルシューティングするために実行する必要がある手順はどれですか？２つ選択してください。",
+    "options": [
+      "代理承認者を許可するように各承認ステップが設定されていることを確認する",
+      "承認履歴をチェックして、[承認申請] ボタンがクリックされたことを確認する",
+      "代理承認者のユーザー設定を確認する",
+      "設定変更履歴から、メールが送信されたことを確認する"
+    ],
+    "answer": "A,C",
+    "explanation": "代理承認者がメールを受け取るには、承認ステップの設定で「代理承認者を許可する」にしていること（A）と、代理承認者自身の個人設定で「承認者または代理担当者の場合」に受信する設定になっていること（C）が必要です。",
+    "category": "自動化プロセス"
+  },
+  {
+    "question": "Cloud Kicks社では、アーカイブ済みの活動の影響を理解したいと考えています。管理者がアーカイブ済みの活動に関して伝えるべき考慮事項はどれですか？2つ選択してください。",
+    "options": [
+      "365日以上前に作成された活動はアーカイブされる",
+      "365日以上前に終了した活動はアーカイブされる",
+      "アーカイブの活動は365日後にされる",
+      "365日以上前に作成され、期日がないクローズされたToDoはアーカイブされる"
+    ],
+    "answer": "B,D",
+    "explanation": "ToDoや行動は、終了や完了から365日が経過すると（あるいは期日なしで作成から365日経過すると）UI上から非表示のアーカイブ状態へ移行します。これにより画面のパフォーマンスが保たれます。",
+    "category": "データ管理と分析"
+  },
+  {
+    "question": "ユニバーサルコンテナ社ではテリトリー管理を使用して、販売テリトリーを管理しています。テリトリーマネージャおよびセールス担当者はロール階層の同じロールレベルに位置します。取引先オブジェクトおよび商談オブジェクトは非公開に設定されています。 テリトリーマネージャはテリトリーに割り当てられた取引先および商談に対してどのレコードアクセス権が許可されますか？３個の回答を選択",
+    "options": [
+      "商談の所有者に関係なく、テリトリーに割り当てられた商談を移行および削除できる",
+      "商談の所有者に関係なく、テリトリー内で取引先に関連付けられたすべての商談を編集できる",
+      "商談の所有者に関係なく、テリトリー内で取引先に関連付けられたすべての商談を移行できる",
+      "商談の所有者に関係なく、テリトリー内で取引先に関連付けられたすべての商談を参照できる",
+      "取引先の所有者に関係なく、テリトリーに割り当てられた取引先を参照、編集、移行、および削除できる"
+    ],
+    "answer": "B,C,D",
+    "explanation": "テリトリーのメンバーは、そのテリトリーの取引先に対しフルアクセスを持ちます。さらに関連する商談に対してもデフォルトのレベル（参照[D]、編集[B]、移行[C]）が与えられます。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "マーケティングマネージャは、取引先に関連付けられた取引先責任者の数を表示する項目を各取引先に追加するように依頼しました。マネージャはこの項目をメールマーケティングのセグメンテーション戦略の一部として使用したいと考えています。",
+    "options": [
+      "取引先責任者の数を数えて取引先に人数を表示する積み上げ集計項目を作成する",
+      "count()関数を使用して、関連する取引先買任者の数を数えるカスタム数式項目を取引先に作成する",
+      "取引先にカスタム項目を作成する。ワークフロールールを使用して、取引先責任者が追加または削除されたときに項目を更新する",
+      "取引先にカスタム項目を作成する。Apexトリガを使用して、取引先責任者が追加または削除されたときに項目を更新する"
+    ],
+    "answer": "D",
+    "explanation": "取引先と取引先責任者は「参照関係」であり、積み上げ集計項目は使用できません。そのため件数を子レコード（連絡先）から自動集計して親にカウントするには、Apexトリガー等のカスタマイズが必要です（※Flowが選択肢にない従来の問題）。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "Cloud Kicks のサポートエージェントはケースとバグを関連付けて、ケースに関連しているバグを追跡できるようにします。バグを作成するためにはケースが必要です。 オブジェクトリレーションのうち、この要件を満たすものはどれですか？",
+    "options": [
+      "階層",
+      "参照関係",
+      "主従関係",
+      "連結"
+    ],
+    "answer": "C",
+    "explanation": "親（ケース）がいないと子（バグ）が作成できないといった強力な依存関係を持たせるには、「主従関係（Master-Detail）」を作成します。",
+    "category": "サービス・サポート"
+  },
+  {
+    "question": "営業マネージャはある取引先責任者を表示できません。取引先責任者の所有者は、ロール階層において営業マネージャの下位に存在しています。 なぜ営業マネージャは、取引先責任者にアクセスしようとした際に、「アクセス権がありません」というエラーが表示されるのでしょうか？",
+    "options": [
+      "取引先責任者の所有者はロール階層内の他のユーザと取引先責任者を共有するためのオプションを設定していない",
+      "取引先責任者の共有設定が非公開のため、アクセスが取引先責任者の所有者とシステム管理者のみに制限されている",
+      "取引先の共有設定は親レコードによって制御され、取引先の所有者は営業マネージャの下位ロールに存在していない",
+      "取引先責任者の共有設定は親レコードにより制御され、取引先の所有者は営業マネージャの下位ロールに存在していない"
+    ],
+    "answer": "D",
+    "explanation": "元のサイトの解答Bは誤りです。所有者が部下でもマネージャーから見えない場合、取引先責任者の組織共有設定が「親レコードに連動（Controlled by Parent）」で、かつ親である取引先のアクセス権がマネージャーに無い（ロール下位に親の所有者がいない等）ことが原因です。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "ユーザは、条件に基づく共有ルールを通して、商品サポートケースに対する「参照・更新」 アクセス権を与えられています。ユーザのプロファイルはケースの」参照」権限のみを所有しています。 ユーザの商品サポートケースに対する編集権限について正しいのはどれですか？",
+    "options": [
+      "ユーザは商品サポートケースを編集できない",
+      "ユーザは自ら作成したケースのみを編集できる",
+      "ユーザは手動共有されたケースのみを編集できる",
+      "ユーザは商品サポートケースを編集できる"
+    ],
+    "answer": "A",
+    "explanation": "重大な誤答（D）の修正です。Salesforceでは「プロファイルの権限」が絶対的な上限です。プロファイルで「参照」権限しかない場合、共有ルールで「参照・更新」を付与しても、オブジェクト自体を編集できないためケースは一切編集できません。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "ユニバーサルコンテナ社では、応募者(Applicant_c) かカスタムオブジェクトと、募集種別(Position_c) カスタムオブジェクトを使用して、採用管理アプリケーションを実装したいと考えています。各募集職種レコードは、それぞれ関連する応募者を多数関連づけることができるようにします。 募集職種レコードが削除された場合でも、応募者レコードは維持されるようにするためには、管理者はどのようなソリューションを推奨すべきですか？",
+    "options": [
+      "募集職種(Position_c) オブジェクトに主従関係項目を作成する",
+      "応募者(Applicant_c) オブジェクトに参照関係項目を作成する",
+      "募集職種(Position_c) オブジェクトに参照関係項目を作成する",
+      "応募者(Applicant_c) オブジェクトに主従関係項目を作成する"
+    ],
+    "answer": "B",
+    "explanation": "親レコードが削除されても子レコードを残すには、主従関係ではなく「参照関係（Lookup）」を使用する必要があります。この場合、子である応募者側に参照関係項目を作ります。",
+    "category": "オブジェクト構成"
+  },
+  {
+    "question": "システム管理者が、システム内に同じ名前を持つ2つの取引先レコードが存在すると指摘しています。同じ名前の取引先責任者レコードが各取引先に関連付けられています。 Salesforce マージ機能を使用する場合、これらの取引先をマージする手順はどれが正しいですか？",
+    "options": [
+      "重複する取引先をマージして、重複する取引先責任者をオプションでマージするというボックスをチェックする",
+      "重複する取引先をマージした後に、重複する取引先責任者をマージする",
+      "重複する取引先責任者をマージした後に、重複する取引先をマージする",
+      "重複する取引先をマージすると、重複する取引先責任者が自動的にマージされる"
+    ],
+    "answer": "B",
+    "explanation": "標準の取引先マージ機能を使用した場合、重複する取引先レコード自体は１つに統合されますが、それに紐づく「取引先責任者」同士が同じ名前であっても自動的にマージされるわけではありません。そのため、先に取引先をマージし、その後に重複した取引先責任者を手動でマージする必要があります。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "ユニバーサルコンテナ社では、見込み客または顧客の2つの状況値で取引先を分類しています。システム管理者は、商談が成立したときに見込み客を顧客に自動的に変更したいと考えています。 システム管理者はこれを遂行するためにどう対応すればよいでしょうか？2つ選択してください。",
+    "options": [
+      "Visualforce を使用して取引先状況項目を更新する",
+      "取引先状況項目を更新する商談ワークフロールールを作成する",
+      "プロセスビルダーを使用して取引先状況項目を更新する",
+      "取引先項目を更新する取引先承認プロセスを作成する"
+    ],
+    "answer": "B,C",
+    "explanation": "元の解答（B,D）は誤りです。子（商談）の変更をトリガーに親（取引先）の項目を自動更新するには「クロスオブジェクト項目自動更新」を用いる必要があり、これは商談のワークフロールール（B）やプロセスビルダー（C）で実装可能です。",
+    "category": "自動化プロセス"
+  },
+  {
+    "question": "Northern Trail Outfitters では、あるレコードタイプを使用したレコードへのアクセスを5人のユーザに制限する必要がありますが、この5人はそれぞれプロファイルが異なります。 この要件を満たすにはどうすればよいですか？",
+    "options": [
+      "５人のユーザの公開グループと、このレコードタイプを使用したカスタムの親ケースレコードを作成して、このケースをレコード所有者ごとに共有する",
+      "このレコードタイプを使用したすべてのケースに、「すべてのデータの参照」アクセス権がある権限セットグループを作成する",
+      "５人のユーザの公開グループを作成し、基準に基づく共有ルールを使用してこのレコードタイプを使用したケースを公開グループと共有する",
+      "５人のユーザ用に「すべてのデータの参照」アクセス権を設定した新しいプロファイルを作成し、他のすべてのプロファイルからこのレコードタイプへのアクセス権を削除する"
+    ],
+    "answer": "C",
+    "explanation": "特定の5人「のみ」にアクセスさせるには、対象を組織の共有設定で非公開にし、その5人で作った「公開グループ」に対して、共有ルールを用いて当該レコードタイプのみを共有するのが最適解です。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "ユニバーサルコンテナ社には4つの営業地域があります。その内訳は、北米、アジア太平洋、ヨーロッパ・中東・アフリカおよびラテンアメリカです。各販売地域はセールス部門 VP が統括しています。名VP は、担当地域のデータのみのコンポーネントで構成されるダッシュボードを毎週月曜日の朝にメールで受け取りたいと考えています。 システム管理者がこの要件を満たすにはどうすればよいでしょうか？",
+    "options": [
+      "レポート作成スナップショントを作成し、ダッシュボードオプションをチェックして、月曜日の朝に配信されるようにスケジュールを設定する",
+      "各地域を条件に設定したダッシュボードを1つ作成して、月曜日の朝に配信されるようにスケジュールを設定する",
+      "条件を作成するために Visualforce を使用してダッシュボードを1つ作成して、月曜日の朝に配信されるようにスケジュールを設定する",
+      "セールス部門 VPことのデータを表示する個別のダッシュボードを作成して、月曜日の朝に配信されるようにスケジュールを設定する"
+    ],
+    "answer": "D",
+    "explanation": "元の解答Bは誤りです。「動的ダッシュボード」はログインユーザー毎にデータを変えられますがスケジュール機能が使えません。また、共有のダッシュボードをスケジュールすると全VPに同じデータが届きます。したがって「VPごとに個別のダッシュボードを作成してスケジュール（D）」が正解です。",
+    "category": "データ管理と分析"
+  },
+  {
+    "question": "Salesforce コンソールのチャットとはどのような機能ですか？３つ選択してください。",
+    "options": [
+      "ナレッジ記事の検索に記事ツールを使用できる",
+      "詳細タブで訪問者に関する情報を参照できる",
+      "チャットは別のエージェントに転送できる",
+      "1つのウィンドウの中で複数の訪問者がチャットできる",
+      "チャットウィンドウでケースをエスカレーションする際に、承認プロセスを使用できる"
+    ],
+    "answer": "A,B,C",
+    "explanation": "チャット（Live Agent）のコンソールでは、ナレッジの即時検索（A）、訪問者の詳細動線の参照（B）、他のエージェントへの転送（C）などが行えます。",
+    "category": "サービス・サポート"
+  },
+  {
+    "question": "財務VP がレコードを確認中、ローン申請者が承認されたか代替商品を案内されたかを示す情報に不備があることに気が付きました。この情報は、営業サイクルの途中で選択リストを使用して収集されます。 商談を完了する前にこの項目が必ず入力されているようにするにはどうすればよいですか？",
+    "options": [
+      "ワークフロールールを作成する",
+      "ページレイアウトでこの項目を必須にする",
+      "項目レベルセキュリティでこの項目を必須にする",
+      "入力規則を作成する"
+    ],
+    "answer": "D",
+    "explanation": "「フェーズがClosed Won（完了）になる時のみ」というような特定の条件を満たしたときに必須にするには、ページレイアウトの必須設定ではなく、数式を使える「入力規則（Validation Rule）」を使用する必要があります。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "変更セットを使用して複数の環境間で移行できるのはどの種類のメタデータですか？２つ選択してください。",
+    "options": [
+      "カスタム項目",
+      "取引先チームロール",
+      "標準選択リスト項目の値",
+      "メールテンプレート"
+    ],
+    "answer": "A,D",
+    "explanation": "変更セットを使用してメタデータを移行できるのは、カスタム項目（A）やメールテンプレート（D）、Apexクラスなどのシステム構成要素です。標準選択リストの値など（C）は移行できません。",
+    "category": "環境管理・展開"
+  },
+  {
+    "question": "ユニバーサルコンテナ社のインサイドセールスマネージャは、リード状況が「進行中」から別の値に変わるまでにどのくらい時間がかかるかの報告できるようにしたいと考えています。営業チームからは、状況値の変更に必要なクリック数を減らしてほしいと依頼されました。 システム管理者はこの要件を満たすために何をする必要ありますか？",
+    "options": [
+      "リード状況項目の項目履歴管理を有効にして、その項目に基づいてレポートを作成する",
+      "リード状況が変更されたときにメールを送信するワークフロールールを使用する",
+      "状況項目が変更されたときに、日付の差を計算する数式項目を使用する",
+      "クイックアクションを使用し、状況項目と日付項目を更新する"
+    ],
+    "answer": "D",
+    "explanation": "元の解答Aのみでは不十分です。「状況の変更クリックを減らす」という営業要望と「期間のレポート」の両方を満たすには、ワンクリックで状況と時間を保存できる「クイックアクション（D）」を作成するのが最適です。",
+    "category": "データ管理と分析"
+  },
+  {
+    "question": "Cloud Kicks には、VIP ショールーム専用のアプリケーションがあります。 このアプリケーションへのアクセスを許可するために使用すべき機能はどれですか？",
+    "options": [
+      "権限セットグループ",
+      "代理管理者",
+      "セッションベースの権限セット",
+      "シングルサインオン"
+    ],
+    "answer": "C",
+    "explanation": "特定の機密アプリへのアクセスを、再認証等を経たセキュアな特定のセッションの間に限定して許可するには「セッションベースの権限セット」を利用します。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "四半期の売上予測を確認していたマネージャが、チームに入ったばかりのメンバーが売上予測に含まれていないことに気が付きました。いくつかのレポートを見ると、この営業担当は今月6件の商談を完了させ、他に3件の商談が進行中です。 このトラブルシューティングでシステム管理者が最初にすべきことは何ですか？",
+    "options": [
+      "「すべての売上予測の参照」権限を含む権限セットを作成する",
+      "ユーザの一般情報の下にある[売上予測を許可]をオンにする",
+      "「すべての売上予測の参照」権限を営業プロファイルに割り当てる",
+      "ユーザが選択しているアプリケーションを確認し、必要に応じてタブを調整する"
+    ],
+    "answer": "B",
+    "explanation": "ユーザーが Collaborative Forecasts (コラボレーション売上予測) の集計対象として表示されるためには、ユーザーレコードの設定にある「売上予測を許可（Allow Forecasting）」のチェックボックスをオンにする必要があります。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "管理者は、変更セットを使用して Sandbox 内のカスタマイズを本番環境に移行しています。最初の変更セットを作成した後、一部のコンポーネントが欠落していることに気付きました。 管理者が変更セットに関して行う必要がある考慮事項は何です？３つ選択してください。",
+    "options": [
+      "変更セットのコピーを作成して、アップロードされた変更セットに連動コンポーネントを追加する",
+      "新しい変更セットを使用して、メタデータとデータを Sandboxから本番環境にリリースする",
+      "すべての連動コンポーネントをリリースする",
+      "アップロードされた変更セットを編集して、追加のコンポーネントを追加する",
+      "送信変更セットに権限とアクセス設定を追加する"
+    ],
+    "answer": "A,C,E",
+    "explanation": "変更セットに関する考慮事項として、一度アップロードされたものは修正できないためコピーして追加する（A）、連動コンポーネントを含める（C）、カスタム項目等を見せるためにプロファイルなど設定（パーミッション）を追加する（E）ことが必要です。",
+    "category": "環境管理・展開"
+  },
+  {
+    "question": "変更セットを使用して承認プロセスを移行するときにシステム管理者は何を考慮すべきですか？",
+    "options": [
+      "変更セットには、ソース組織の有効承認プロセスの順序は含まれない",
+      "対象組織にいったんリリースされると、承認プロセスの一意の名前は変更できない",
+      "変更セットには、ソース組織の承認および却下アクションが含まれない",
+      "標準オブジェクトのカスタム項目は、対象組織に手動で追加する必要がある"
+    ],
+    "answer": "A",
+    "explanation": "承認プロセスを変更セットで移行した場合、複数のプロセスがある際の「評価順序」はメタデータに含まれないため、リリース先の組織で手動で順序を設定し直す必要があります。",
+    "category": "環境管理・展開"
+  },
+  {
+    "question": "ユニバーサルコンテナ社の HR ディレクターは、Position カスタムオブジェクトの給与範囲と給与等の選択リストエントリを更新する必要があります。これらの Position オブジェクトに対する変更は、頻繁に発生するため、これらの選択リスト値を更新する機能を要求しています。 これを許可するために、管理者はどの機能を考慮するべきですか？",
+    "options": [
+      "Positionオブジェクトの代理管理権限",
+      "Positionオブジェクトのすべてのデータの変更権限を含む権限セット",
+      "Positionオブジェクトの選択リストに対する編集権限を設定した項目アクセス権限",
+      "カスタムメタデータタイプを使用した画面フロー"
+    ],
+    "answer": "A",
+    "explanation": "システム管理者以外の特定ユーザー（HRディレクターなど）に、特定のカスタムオブジェクトの項目や選択リスト値の管理のみを許可するには、「代理管理者（Delegated Administration）」機能を使用するのが最適です。",
+    "category": "オブジェクト構成"
+  },
+  {
+    "question": "セールス部門 VPは、商談フェーズが変更されたときに、「次のステップ」項目が必ず更新されるようにしたいと考えています。 このプロセスを自動化するにはどうすればよいでしょうか？",
+    "options": [
+      "次の数式を使用したワークフロールールを作成する：AND( ISCHANGED(ISPICKVAL(StageName), ISCHANGED(NextStep))",
+      "次の数式を使用した入力規則を作成する：AND( ISCHANGED(ISPICKVALSstageName)), NOT( ISCHANGED(NextStep)))",
+      "次の数式を使用した入力規則を作成する：AND( ISCHANGED(StageName), NOT( ISCHANGED(NextStep)))",
+      "次の数式を使用したワークフロールールを作成する：AND( ISCHANGED(StageName), NOT( ISCHANGED(NextStep))"
+    ],
+    "answer": "C",
+    "explanation": "「フェーズ（StageName）が変更されたのに、NextStepが変更されていない場合はエラーにする」というロジックは、入力規則にて「ISCHANGED(StageName) かつ NOT(ISCHANGED(NextStep))」と記述します。",
+    "category": "自動化プロセス"
+  },
+  {
+    "question": "システム管理者がデータローダを使用して取引先レコードの所有権を移行すると、どのような結果になりますか？２つ選択してください。",
+    "options": [
+      "すべての取引先チームが、移行されたレコードから削除される",
+      "新しいすべての所有者に新しい取引先の所有権が自動的に通知される",
+      "レコードの所有権をベースにするすべての共有ルールが再適用される",
+      "すべての手動共有が、移行されたレコードから削除される"
+    ],
+    "answer": "C,D",
+    "explanation": "データローダ（API）経由で所有者を一括変更した場合でも、所有者を基準とする共有ルールは再計算・再適用され（C）、同時に所有者が変わるため以前の「手動共有」で作成された共有レコードはすべて一掃（削除）されます（D）。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "ユニバーサルコンテナ社のサポートチームは顧客とのサービスレベル契約を追跡する必要があります。現在は顧客から連絡があったときに契約を手作業で検索しています。 このプロセスを自動化するにはシステム管理者はどうすればよいでしょうか？",
+    "options": [
+      "サポートマネージャに古いケースを伝えるメールアラートを送信するワークフロールールを設定する",
+      "エンタイトルメントを有効化し、エンタイトルメントおよびサービス契約のタブを追加する",
+      "ケースフィードを有効化し、ケースフィードレイアウトに契約カスタムパブリッシャーを追加する",
+      "サービスレベル契約の優先順位が高い顧客のために非公開 Chatter グループを作成する"
+    ],
+    "answer": "B",
+    "explanation": "顧客のSLA（サービスレベル契約）をシステム上で自動的に追跡・アラートさせるには、Salesforce標準の「エンタイトルメント管理」と「サービス契約」を設定するのが正しいアプローチです。",
+    "category": "サービス・サポート"
+  },
+  {
+    "question": "ユニバーサルコンテナ社では、新しいリードプロセスを実装しており、以下のことを実現したいと考えています。・５つの異なる状況項目を通じてリードをトラックする・各状況にどれくらいの期間を要したかをレポートで表示する・リードの作成から変換までのすべての存続期間に関する情報をレポートで表示する・リード状況に値が設定されないことを防止する\nこの要件はどのようにして満たすことが推奨されますか？",
+    "options": [
+      "カスタムの日付項目を複数作成し、各状況ごとにワークフロールールを作成する。そして、各状況ごとの期間を計算するカスタム数式項目を作成する。また、値の入力をスキップできない入力規則を作成する。",
+      "リード状況項目を追跡するために、リード履歴レポートを使用し、状況期間を計算するためにカスタムのレポート項目を使用する。また、値の入力をスキップできない入力規則を作成する。",
+      "各状況ごとのカスタム日付項目にデータをセットする Apex トリガを使用する。そして、各状況ごとの期間を計算するカスタム数式項目を作成する。",
+      "各状況ごとの期間を追跡するため、項目履歴管理をリード状況項目に対して有効にする。また、値の入力をスキップできない入力規則を作成する。"
+    ],
+    "answer": "B",
+    "explanation": "リードの状況（フェーズ）ごとにどれだけの期間滞留したかをレポートするには、リード履歴管理を有効にした上で、標準の「リード履歴レポート」（期間/Duration項目が含まれます）を利用し、入力スキップは入力規則で防ぎます。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "カスタマーコミュニティに Experience Cloud を使用している Ursa Major Solar では、基本的な質問に答え、さらなるサポートが必要な場合にはトピックと対応可能状況に応じてお客様を適切なエージェントに転送するチャットボットをサイトに導入したいと考えています。 システム管理者がこの要望に対応するために設定すべき機能はどれですか？２つ選択してください。",
+    "options": [
+      "連絡要求フロー",
+      "オムニチャネル",
+      "Web-to-ケースフォーム",
+      "スキルベースのルーティング"
+    ],
+    "answer": "B,D",
+    "explanation": "チャットボットからエージェントへの転送において、「対応可能状況」での割り当てには『オムニチャネル（B）』を、「トピックや内容に応じた適任者への割り当て」には『スキルベースのルーティング（D）』を使用します。",
+    "category": "サービス・サポート"
+  },
+  {
+    "question": "テリトリー管理が有効になっている Cloud Kicks のシステム管理者が、テリトリーモデルを設定しています。テリトリーの一部のユーザは、取引先に関連付けられている取引先責任者と商談にアクセスする必要があります。 テリトリーのユーザが使用可能な機能はどれですか？２つ選択してください。",
+    "options": [
+      "参照のみ",
+      "参照と編集",
+      "参照と移行",
+      "参照、編集、移行、削除"
+    ],
+    "answer": "A,B",
+    "explanation": "元の解答（A,C）は不正確です。テリトリー管理において、取引先に関連する商談へのアクセスレベルとして選べるのは「アクセス権限なし」「参照のみ（A）」「参照および更新（編集）（B）」のいずれかです。移行アクセスは付与ルールが異なります。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "Cloud Kicks には、完了した商談は編集できないというポリシーがあります。時として、会計上の理由により、商談に調整を行う必要のあることがあります。元の商談の完全性を維持するために、調整を追跡するカスタムオブジェクトが作成されています。 ユーザが、調整回数を追跡する積み上げ集計項目を必要としています。 システム管理者はどのような方法でこの目的を達成すべきですか？",
+    "options": [
+      "商談に参照関係を作成する",
+      "調整に参照関係項目を作成する",
+      "調整に主従関係項目を作成する",
+      "商談に主従関係を作成する"
+    ],
+    "answer": "C",
+    "explanation": "親オブジェクト（商談）に対して、子オブジェクト（調整）のレコード情報（件数や合計）を「積み上げ集計」で親に反映させるためには、子オブジェクト側に「主従関係（Master-Detail）」を作成する必要があります。",
+    "category": "オブジェクト構成"
+  },
+  {
+    "question": "サポートマネージャが、同じようなスキルやヘルプ記事を要した他のケースを見つけ出す手段を求めています。こうした手段があれば、お客様に繰り返し生じる問題への対応に適したサポートエージェントをすぐに見つけることができます。 この場合に役立つオブジェクトリレーションはどれですか？",
+    "options": [
+      "階層関係",
+      "自己参照",
+      "間接関係",
+      "主従関係"
+    ],
+    "answer": "B",
+    "explanation": "元の解答（C）は誤りです。ケースオブジェクト内で「他の関連するケース」や「似たケース」をリンクして追跡するために標準的に使用されるリレーションシップは、自分自身のオブジェクトを参照する「自己参照（Self Lookup）」です。",
+    "category": "サービス・サポート"
+  },
+  {
+    "question": "ユニバーサルコンテナ社では、カスタムオブジェクトを使用して顧客のクレームを追跡しています。そして、そのカスタムオブジェクトに他のクレームを参照する項目を追加したいと考えています。どのリレーションタイプを使用してこれを実現できますか?",
+    "options": [
+      "主従関係",
+      "参照関係",
+      "連結関係",
+      "階層関係"
+    ],
+    "answer": "B",
+    "explanation": "同一のオブジェクト同士（クレーム→別のクレーム）を関連付けて親・子や関連レコードとして繋ぐには、対象を自オブジェクトとする「自己参照関係（Lookup/参照関係）（B）」を使用します。※元の解答等の連結関係は不要です。",
+    "category": "オブジェクト構成"
+  },
+  {
+    "question": "コラボレーション売上予測では何ができますか?３つ選択してください。",
+    "options": [
+      "目標をオーバーレイする",
+      "売上予測分類名を変更する",
+      "売上予測分類を追加する",
+      "商談の分割を使用して予測する",
+      "デフォルトの売上予測通貨設定を選択する"
+    ],
+    "answer": "B,D,E",
+    "explanation": "コラボレーション売上予測では、売上予測分類の名前（「パイプライン」「最善ケース」など）をカスタマイズして変更すること（B）や、商談収益の分割（商談チームでの分配）を含めて予測すること（D）、およびデフォルトの売上予測通貨を設定すること（E）が可能です。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "ユニバーサルコンテナ社では、本番環境に Salesforce Field Service ライセンスを購入しました。これらのライセンスを現在使用している Sandbox にも、最小限のインパクトで有効にしたいと考えています。 管理者は、Sandbox 環境へライセンス情報を反映させるために、どのようにすべきですか?",
+    "options": [
+      "[本番ライセンスに一致]機能を使用する",
+      "本番環境から Sandbox を更新する",
+      "Salesforce サポートにケースを送信する",
+      "テンプレートを使用して、本番環境と Sandbox をマージする"
+    ],
+    "answer": "A",
+    "explanation": "Sandbox環境のライセンス情報を手作業やリフレッシュで更新するのではなく、Sandbox組織の「組織情報」画面にある「本番ライセンスに一致」ボタンをクリックすることで、本番環境の最新のプロビジョニング済みライセンスをSandboxに即座に同期できます。",
+    "category": "環境管理・展開"
+  },
+  {
+    "question": "変更セットに関する正しい記述はどれですか?３つ選択してください。",
+    "options": [
+      "変更セットにコンポーネントを追加すると、すべての連動コンポーネントが自動的に追加される",
+      "変更セットを本番環境にリリースすると、デフォルトですべての Apex テストが自動的に実行される",
+      "カスタム項目を変更セットに追加すると、項目レベルセキュリティも自動的に含まれる",
+      "リリース前にユーザが変更セットを確認できる機能がある",
+      "変更セットを使用するには、少なくとも1つのインバウンド接続と1つのアウトバウンド接続が存在する必要がある"
+    ],
+    "answer": "B,D,E",
+    "explanation": "変更セットは、①本番環境へのリリース時にはローカルのApexテストが自動実行され（B）、②リリース前に「検証（Validate）」を実行してエラーがないか確認でき（D）、③送信側・受信側でのリリース接続設定（E）が必須となります。※連動コンポーネントは「自動」ではなく手動ボタンで追加するためAは誤りです。",
+    "category": "環境管理・展開"
+  },
+  {
+    "question": "２つのオブジェクトの間で参照関係が作成されている場合で、参照レコードが削除されたときの処理として、システム管理者はどのオプションを選択できますか?３つ選択してください。",
+    "options": [
+      "ユーザに他のレコードを入力させて、参照関係を修復する",
+      "関連レコードも削除する",
+      "参照関係の一部となっている参照レコードの削除を許可しない",
+      "参照項目の値をクリアする",
+      "レコード所有者に通知する"
+    ],
+    "answer": "B,C,D",
+    "explanation": "重大な誤答（A）の修正です。Salesforceの標準の参照関係項目で親レコードが削除されたときの動作オプションは「①この項目の値をクリアする（D）」「②参照関係の一部となっているレコードの削除を許可しない（C）」「③関連レコードも削除する（B）」の３つのみです。",
+    "category": "オブジェクト構成"
+  },
+  {
+    "question": "営業担当者ごとの商談の一覧表示する商談パイプラインレポートに、同じ取引先に対して作成された複数の商談が表示されています。セールスマネージャーは、各担当者がビジネスを作成した個々の取引先の数を知りたいと考えていす。 営業担当者ごとの個々の取引先の数を確認したい場合、レポートをどのように変更すべきですか?",
+    "options": [
+      "取引先名のバケット項目を追加し、バケットでグループ化する",
+      "カスタム集計項目を作成し、取引先ごとにグループ化する",
+      "レポートビルダーの [取引先名] 列で [ユニークカウントを表示]を選択する",
+      "取引先でグループ化し、デフォルトでチェックされるカスタムチェックボックス項目を集計する"
+    ],
+    "answer": "C",
+    "explanation": "レポートで同じ取引先名の重複を排除して純粋な「社数」を数えたい場合は、対象列（取引先名）の設定メニューから「一意の件数を表示（Show Unique Count）」を選択するのが最も簡単で標準的な手法です。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "Northern Trail Outfitters では、5人の代理管理者と２人のシステム管理者がいます。営業担当者のログイン設定が変更されたというケースが複数登録されています。 管理者は、どの設定が変更されたかをどこで確認することができますか?",
+    "options": [
+      "ログイン履歴",
+      "設定変更履歴",
+      "項目履歴管理",
+      "デバッグログ"
+    ],
+    "answer": "B",
+    "explanation": "ユーザーのログイン設定（ログイン時間帯、IPアドレス制限、パスワードリセットなど）を「誰が・いつ」変更したかを追跡するためには管理用の「設定変更履歴（Setup Audit Trail）」を確認します。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "ユーザのロールをEMEA (ヨーロッパ・中東・アフリカ) セールス担当者からUS (アメリカ) セールス担当者に変更します。 所有者に基づく共有ルールはそのユーザが所有するレコードにどのような影響を与えますか?",
+    "options": [
+      "オブジェクトのレコードの所有権に影響を与えるが、カスタムオブジェクトには影響を与えない",
+      "所有者に基づく共有ルールはすべて再適用されない",
+      "所有者に基づく共有ルールはすべて再適用される",
+      "ユーザがロール階層の上位に移動した場合、所有権をベースにした共有ルールにのみ影響を与える"
+    ],
+    "answer": "C",
+    "explanation": "ユーザーがロール階層を移動（ロールの変更）すると、そのユーザーが現在所有しているレコードに対して、ロールや所有権に依存するすべての「所有権ベースの共有ルール」がバックグラウンドで再計算・再適用されます。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "ユニバーサルコンテナ社は、毎月のサービスサブスクリプションを販売しており、商談レポートが毎月受け取る金額を正確に表していることを確認したいと考えています。 この要件を満たすために、管理者はどのソリューションを使用する必要がありますか?",
+    "options": [
+      "プロセスビルダーとフローを使用して、カスタムオブジェクトレコードを作成する",
+      "各レポート期間に任意の数式項目を使用する",
+      "毎月ごとに週のレポート作成スナップショットを使用する",
+      "各収益期間の製品収益スケジュールを使用する"
+    ],
+    "answer": "D",
+    "explanation": "商品の総額を特定の期間（毎月など）にわたって均等に分割・またはスケジュールして売上認識を行いたい場合は、商品ごとの「収益スケジュール（Revenue Schedule）」機能を使用します。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "ユニバーサルコンテナ社は、参照関係を主従関係に変換したいと考えています。 リレーションを変換する前に、管理者はどのようなアクションを実行する必要がありますか?",
+    "options": [
+      "既存のすべてのレコードの現在のルックアップ項目に値があることを確認する",
+      "項目タイプを変更する前に、親の積み上げ集計項目を削除する",
+      "新しい主従関係項目を追加する前に、現在のルックアップ項目を削除する",
+      "主従関係項目で[親の変更を許可]オプションを選択する"
+    ],
+    "answer": "A",
+    "explanation": "「参照関係」では親レコードが空（空白）でも許容されますが、「主従関係」では親レコードの指定が必須となります。そのため変換する前に、既存のすべての子レコードのルックアップ項目に値が入力されていることを確認（または入力）する必要があります。",
+    "category": "オブジェクト構成"
+  },
+  {
+    "question": "ユニバーサルコンテナ社では、従業員が休暇申請を提出して、承認を得るために上司にその申請を送るプロセスがあります。ある従業員が申請を提出しようとしましたが、提出できませんでした。 システム管理者はこれをトラブルシュートするために何をすべきですか?",
+    "options": [
+      "ユーザレコード上には有効なユーザである上司レコードが必ず割り当てられるようにする",
+      "ワークフローを使用して、プロセスに問題が起きた場合にシステム管理者にメールを送信する",
+      "システムログを確認して根本原因を特定する",
+      "承認ステップにアクションが必ず関連付けられるようにする"
+    ],
+    "answer": "A",
+    "explanation": "承認プロセスで承認者を「マネージャー（上司）」に設定している場合、申請者のユーザーレコードの「マネージャー」項目が空（空白）、または無効なユーザーが設定されていると、承認ルートを計算できずに申請エラーが発生します。",
+    "category": "自動化プロセス"
+  },
+  {
+    "question": "ユニバーサルコンテナ社は、コミュニティの使用を検討しています。各パートナーは製品に関連付けられており、個別のコミュニティが必要になります。一部のパートナーは、複数のコミュニティにアクセスする必要があります。 管理者が知っておくべき考慮事項は何ですか?２つ選択してください。",
+    "options": [
+      "最大 100個のコミュニティの組織制限には、アクティブ、非アクティブ、およびプレビューコミュニティが含まれる",
+      "コミュニティライセンスは、特定のコミュニティに関連付けられる",
+      "メンバーベースまたはログインベースのコミュニティライセンスを選択することができる",
+      "最大 100個のコミュニティの組織制限には、無効なコミュニティおよびプレビューコミュニティは含まない"
+    ],
+    "answer": "A,C",
+    "explanation": "Experience Cloud（旧コミュニティ）の1組織あたり最大100個の制限には、有効・無効・プレビューすべてが含まれます（A）。また、付与するライセンスとしてメンバー（Named）ベースか、ログイン回数ベースかを選択できます（C）。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "ステム管理者はリードを作成するユーザに[重複の検索] ボタンのアクセス権を許可しようと考えています。システム管理者は、どのリードオブジェクトレベル権限をユーザに与えることになりますか?",
+    "options": [
+      "マージ",
+      "すべての参照",
+      "削除",
+      "参照および編集"
+    ],
+    "answer": "C",
+    "explanation": "ユーザーインターフェース上で「重複の検索（Find Duplicates）」ボタンを使用して「レコードのマージ」を行うためには、対象のオブジェクト（この場合はリード）に対する「削除（Delete）」権限がシステム仕様上必要になります。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "代理管理者機能では、どれがサポートされていますか?３つ選択してください。",
+    "options": [
+      "コミュニティユーザのロック解除",
+      "非コミュニティユーザのロック解除",
+      "カスタムオブジェクトの管理",
+      "ロールの管理",
+      "ユーザの作成と編集"
+    ],
+    "answer": "B,C,E",
+    "explanation": "代理管理者（Delegated Admin）は、指定されたロールの社内ユーザーの作成・編集（E）やパスワードリセット・ロック解除（B）、特定のカスタムオブジェクトの管理（C）が可能です。コミュニティユーザーの管理やロール階層自体の管理は行えません。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "さまざまなソースからユニバーサルコンテナ社に集まるリードを適切なセールスチームに割り当てる必要があります。アジア太平洋地域のリードの場合、セールスディレクターが承認した場合は外部パートナーにリードを移行できます。リードがパートナーに割り当てられた場合は、そのパートナーのチャネルマネージャに知らせる必要があります。 この要件を満たすために少なくとも必要な自動化ツールの組み合わせはどれですか?",
+    "options": [
+      "割り当てルール、承認プロセス、およびワークフロールール",
+      "割り当てルールおよび承認プロセス",
+      "割り当てルールおよびワークフロールール",
+      "割り当てルール、自動応答ルール、およびワークフロールール"
+    ],
+    "answer": "A",
+    "explanation": "リードを適切な担当者へ割り当てる（割り当てルール）、ディレクターに承認を求める（承認プロセス）、承認完了後にパートナーのマネージャーへメール等で通知する（ワークフロールール/Flow）、という３つのツールの組み合わせにより実現されます。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "システム管理者は組織の商品にどの種類の価格を設定できますか？３つ選択してください。",
+    "options": [
+      "標準価格",
+      "販売価格",
+      "値引価格",
+      "リスト価格",
+      "商品価格"
+    ],
+    "answer": "A,B,D",
+    "explanation": "Salesforceの商品価格設定には３つの階層があります。商談等で確定する「販売価格（B）」、価格表ごとの定価である「リスト価格（D）」、そして組織のベースとなる「標準価格（A）」です。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "営業マネージャが、１人の営業担当者が所有する取引先責任者を参照できません。この営業担当者は、ロール階層で営業マネージャの下に設定されています。 営業マネージャが取引先責任者を参照できないのはなぜですか?",
+    "options": [
+      "取引先責任者の共有設定が非公開である",
+      "取引先責任者が取引先に関連付けられていない",
+      "取引先責任者の共有設定で、階層を使用したアクセス許可のチェックがはずされている",
+      "取引先責任者の共有の直接設定が、マネージャに設定されていない"
+    ],
+    "answer": "B",
+    "explanation": "誤答Cの修正です。「プライベート取引先責任者（取引先＝親レコードと紐付いていない連絡先）」は、組織の共有設定やロール階層に関わらず「所有者とシステム管理者しか見えない」という特殊な仕様があります。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "管理者は、マーケティングユーザ標準プロファイルが割り当てられているユーザに、商品オブジェクトに対する、参照、作成、編集権限を付与するように依頼されています。 この要件はどのようにして満たすことができますか?２つ選択してください。",
+    "options": [
+      "マーケティングユーザ標準プロファイルを編集し、商品オブジェクトに対する参照、作成、編集権限を付与する。",
+      "商品オブジェクトに対する参照、作成、編集権限を付与した権限セットを作成し、それをマーケティングユーザに割り当てる。",
+      "商品オブジェクトに対する読み取り、書き込み権限を付与した権限セットを作成し、それをマーケティングユーザに割り当てる。",
+      "マーケティングユーザ向けに新しいプロファイルを作成し、商品オブジェクトに対して参照、作成、編集権限を付与する。"
+    ],
+    "answer": "B,D",
+    "explanation": "Salesforce標準プロファイルはオブジェクトのカスタム権限（CRUD）を直接編集・変更できません。そのため、①追加の「権限セット」を作成して与える（B）、か ②標準プロファイルをコピーして「カスタムプロファイル」を作成し権限を変える（D）の２つの方法を使用します。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "ユニバーサルコンテナ社では、取引先への制限が設定された「サプライアイテム」という名前のカスタムオブジェクトを使用してリソースを追跡します。サプライアイテムレコードは、取引先レコードを所有するユーザのみが参照できる必要があります。 適切に表示されるようにするにはどの共有設定を設定しますか?",
+    "options": [
+      "親レコードに連動",
+      "非公開",
+      "公開/参照のみ",
+      "公開/参照・更新・所有権の移行"
+    ],
+    "answer": "A",
+    "explanation": "元の解答（非公開）は誤りです。子オブジェクト（サプライアイテム）のアクセス権を、完全に親オブジェクト（取引先）のアクセス権（所有権）と同一に連動させたい場合は、組織の共有設定を「親レコードに連動（Controlled by Parent）」にするのが正解です。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "価格表の作成権限を持つユーザが、商品をコピーして既存の商品と同じ情報を設定した新しい商品を素早く作成できるようにしたいと考えています。 商品をコピーする際に重要な考慮事項はどれですか?",
+    "options": [
+      "ユーザがアクセス権を持たない価格表に価格は追加されない",
+      "追加した価格は、価格表には作成されない",
+      "ユーザがアクセス権を持たない価格表に価格が追加される",
+      "この新しい価格表を使用する前に、価格表に追加された価格を有効化する必要がある"
+    ],
+    "answer": "A",
+    "explanation": "商品をコピー（Clone）した場合、関連する「価格表エントリ（Price Book Entries）」もコピーされますが、実行するユーザー自身がアクセス権を持っていない価格表の価格エントリはセキュリティ上コピー（追加）されません。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "エンタイトルメントプロセスの作成に関する以下の記述のうち、正しいものはどれですか?２つ選択してください。",
+    "options": [
+      "他の項目に基づいて、マイルストンが動的に作成される",
+      "「エンタイトルメントの管理」権限が有効化されている必要がある",
+      "エンタイトルメントオブジェクトは、組織の共有設定で設定可能である",
+      "エンタイトルメントのバージョン管理により、既存のエンタイトルメントプロセスを変更できる"
+    ],
+    "answer": "B,D",
+    "explanation": "エンタイトルメントプロセスを作成・管理するには、システム管理者のプロファイル等で「エンタイトルメントの管理」権限が付与されている必要があります（B）。また、一度有効化して使用中のプロセスにステップを追加・変更したい場合は「バージョン管理」機能を使用して新しいバージョンを作成します（D）。",
+    "category": "サービス・サポート"
+  },
+  {
+    "question": "コラボレーション売上予測で、マネージャの階層で集計されるのはどの値ですか?２つ選択してください。",
+    "options": [
+      "目標金額",
+      "商談金額",
+      "商品金額",
+      "予想収益"
+    ],
+    "answer": "A,B",
+    "explanation": "コラボレーション売上予測のマネージャー階層ビューでは、部下の「商談金額（B）」の積み上げ集計値と、それに対する「目標金額（Quota）（A）」が集計されて表示され、達成率をトラッキングできます。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "セールスチームは取引先の新しい項目「既存の顧客」の追加を依頼しています。初期値は」いいえ」で、関連する商談が成立した場合は」はい」に変更できます。 システム管理者はこの要件を満たすためにどう対応すればよいでしょうか?",
+    "options": [
+      "積み上げ集計項目として「既存の顧客」を設定して、商談が成立したときに常に再適用する",
+      "商談オブジェクトのワークフロールールを使用して、商談が成立したときに「既存の顧客」項目を設定する",
+      "テキスト項目として「既存の顧客」を設定し、承認プロセスを使用して値を再適用する",
+      "取引先オブジェクトのApex トリガを使用して、商談が成立したときに「既存の顧客」項目を設定する"
+    ],
+    "answer": "B",
+    "explanation": "商談のフェーズ（成立）をトリガーにして、親オブジェクトである取引先の項目（既存の顧客フラグ）を自動更新するには、「クロスオブジェクト項目自動更新」をサポートしている商談のワークフロールール（B）、またはプロセスビルダーなどの自動化ツールを使用します。",
+    "category": "自動化プロセス"
+  },
+  {
+    "question": "組織からメタデータを削除するにはどのリリースツールを使用できますか?２つ選択してください。",
+    "options": [
+      "未管理パッケージ",
+      "Ant移行ツール",
+      "変更セット",
+      "開発者コンソール"
+    ],
+    "answer": "B,D",
+    "explanation": "不要になったメタデータ（カスタム項目やApexクラスなど）を本番環境から一括で削除（Destructive Changes）するには、XMLマニフェストを使用する「Ant移行ツール（またはSalesforce CLI）（B）」を使用するか、手動で1つずつ消す「開発者コンソール等のAPIツール（D）」を使用します。※変更セットは「追加・更新」専用であり削除はできません。",
+    "category": "環境管理・展開"
+  },
+  {
+    "question": "ユニバーサルコンテナ社のセールスオペレーションチームは、商談が成立したときに、カスタム項目の出荷日項目にデータが入力されるようにしたいと考えています。 管理者は、この要件を満たすために Salesforce をどのように構成する必要がありますか?",
+    "options": [
+      "ISBLANK()関数を使用して、商談の入力規則を作成する",
+      "Today()関数を使用して、出荷日にデフォルト値を追加する",
+      "フェーズ項目と出荷日項目の間に依存関係を作成する",
+      "商談のページレイアウトで、出荷日項目を必須にする"
+    ],
+    "answer": "A",
+    "explanation": "「フェーズが成立（Closed Won）になった際、出荷日（Shipping Date）が空欄のままだとエラーにする」という仕組みを作ることでデータ入力を強制できます。これには「ISBLANK()」関数を利用した入力規則（Validation Rule）（A）が使用されます。",
+    "category": "自動化プロセス"
+  },
+  {
+    "question": "エンタープライズテリトリー管理で可能なことはどれですか?２つ選択してください。",
+    "options": [
+      "商談へのアクセス権を、条件ベースで拡張することができる",
+      "モデルごとに20個までテリトリー割り当てルールを使用することができる",
+      "ロール階層による共有は、テリトリー階層による共有に変更される",
+      "テリトリ種別ごとに優先度をつけて、テリトリー種別として最も高い優先度または最も低い優先度を示すことができ"
+    ],
+    "answer": "A,D",
+    "explanation": "エンタープライズテリトリー管理では、Apex等を使用して「商談をテリトリーに割り当てるための条件ベースのフィルターを拡張（A）」したり、テリトリー種別に対して「優先度（D）」を設定して階層をまたいだレポーティングや割り当ての競合解決を行うことが可能です。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "ユニバーサルコンテナ社のマーケティング部門では、マーケティングのカスタムオブジェクトのページレイアウトの要件が定期的に変わります。マーケティング部門VPはシステム管理者にこれらのオブジェクトを設定する権限を与えてくれるように依頼しています。 システム管理はこの要件を満たすためにどう対応すればよいでしょうか?",
+    "options": [
+      "マーケティング部門VPをマーケティングのカスタムオブジェクトの代理管理者として設定する",
+      "マーケティングVPのユーザレコードで「マーケティングユーザ」担限を有効化する",
+      "マーケティングのカスタムオブジェクトに対する「編集」権限を持つカスタムプロファイルを作成し、マーケティング部門VPに割り当てる",
+      "管理者ユーザとしてログインすることをマーケティング部門VPに許可する"
+    ],
+    "answer": "A",
+    "explanation": "システム管理者以外の特定ユーザー（マーケティングVP）に、一部のカスタムオブジェクトの管理権限（レイアウト変更等）を委任するためには、「代理管理者（Delegated Administration）」機能を利用します。",
+    "category": "オブジェクト構成"
+  },
+  {
+    "question": "ユニバーサルコンテナ社のセールスVPから、ユーザーが所有していない商談レコードのフェーズを変更していると報告が来ています。VPは、商談の所有者だけが商談のフェーズを変更できるようにしたいと考えています。組織の共有設定は、“公開/参照・更新可能」に設定されています。 レコード所有者のみがフェーズを編集できるようにするには、どの入力規則の条件数式を使用する必要がありますか?",
+    "options": [
+      "NOT( ISCHANGED( StageName), OwnerlD= $User ID)",
+      "NOT( PRIORVALUE( StageName), OwnerlD= $User ID)",
+      "AND( PRIORVALUE( StageName ), OwnerlD<> $User ID)",
+      "AND( ISCHANGED( StageName ), OwnerlD<> $User ID)"
+    ],
+    "answer": "D",
+    "explanation": "「自分自身が所有者ではない場合に、フェーズ（StageName）を変更させない」という入力規則は、「AND( ISCHANGED( StageName ), OwnerId <> $User.Id )」の記述（D：<>のOCRエラーを含む）で最適に制御できます。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "ユニバーサルコンテナ社では、レコードの割り当てにエンタープライズテリトリー管理を活用しています。各テリトリーに割り当てられているユーザは1人のみです。営業担当があるリードを商談に変換します。このリード所有者は商談が変換された取引先と同じテリトリーに属しています。 商談の割り当てがどのようになると予想されますか？",
+    "options": [
+      "商談が取引先と同じテリトリーに割り当てられ、商談所有者がテリトリーの唯一のメンバーになる",
+      "商談が取引先と同じテリトリーに割り当てられ、リード所有者が商談所有者になる",
+      "商談がテリトリーの売上予測マネージャに割り当てられる",
+      "商談が取引先と同じテリトリーに割り当てられ、リード所有者が商談所有者になる。リード所有者がテリトリーの無効のメンバーとして追加される。"
+    ],
+    "answer": "B",
+    "explanation": "エンタープライズテリトリー管理において、テリトリー内のユーザーがリードを取引先/商談に変換した場合、生成された商談は取引先と同じテリトリーを引き継ぎ、リードの所有者がそのまま商談の所有者となります。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "ユニバーサルコンテナ社では、大規模商談が成立したときにセールス部門 VP にメールアラートを送信するワークフロールールを設定しています。VP は、これらのメールが配信されていないと報告しています。 どのツールを使用すると、この問題を特定できますか？２つ選択してください。",
+    "options": [
+      "メールログ",
+      "システム変更履歴",
+      "ワークフローモニタ",
+      "デバッグログ"
+    ],
+    "answer": "A,D",
+    "explanation": "自動化されたメールアラートが送信されたかどうかのリアルタイムの実行履歴やエラーを確認するには「デバッグログ（D）」を、Salesforceサーバーから実際にメールが送信されたかの痕跡を追うには「メールログ（A）」を確認します。",
+    "category": "自動化プロセス"
+  },
+  {
+    "question": "Northern Trail Outfitters では、テリトリーの商談への割り当てを自動化したいと考えています。 この要件を満たすために必要な機能はどれですか？２つ選択してください。",
+    "options": [
+      "商談所有者に基づく共有を有効にする",
+      "割り当てルールを作成する",
+      "Apexクラスを作成する",
+      "検索条件に基づく商談テリトリーの割り当てを有効にする"
+    ],
+    "answer": "B,D",
+    "explanation": "テリトリー管理で商談を自動的にテリトリーに割り当てるには、標準の取引先に対する「割り当てルール（B）」に加え、設定から「検索条件に基づく商談テリトリーの割り当て（フィルターベースの商談割り当て）（D）」を有効にする必要があります。（これを実現するには内部的にApexが必要な場合があります）",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "システム管理者に、ソフトウェア商品を伴う商談とは別に、ハードウェア商品の商談の売上予測をユーザが表示できるようにして欲しいという依頼がありました。ユーザはハードウェア販売とソフトウェア販売に異なる目標を設定できます。 この要件を満たすためには、システム管理者が何を基準に商品を整理すべきですか？",
+    "options": [
+      "商品名",
+      "商品ファミリ",
+      "商品スケジュール",
+      "商品品目"
+    ],
+    "answer": "B",
+    "explanation": "商品の種類ごと（ソフトウェアやハードウェア等）に個別の売上予測や目標を管理したい場合は、標準機能である「商品ファミリ（Product Family）」ごとに売上予測を表示するオプションを使用します。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "Cloud Kicks のシステム管理者に、古い承認プロセスをクリーンアップして欲しいという依頼がありました。システム管理者が削除できないプロセスが１つあります。 このプロセスを削除できない原因と考えられるものはどれですか？２つ選択してください。",
+    "options": [
+      "[管理レポート] フォルダにレポートがある",
+      "ごみ箱に未承認の申請がある",
+      "プロセスが有効とマークされている",
+      "プロセスが無効とマークされている"
+    ],
+    "answer": "B,C",
+    "explanation": "承認プロセスを削除できない理由として、現在そのプロセスが「稼働中（有効）である（C）」ことや、ごみ箱内を含めてまだ完了（承認/却下）していない「未処理の申請レコードが存在する（B）」ことが挙げられます。",
+    "category": "自動化プロセス"
+  },
+  {
+    "question": "カスタマーコミュニティのメンバーに関する正しい記述はどれですか？２つ選択してください。",
+    "options": [
+      "アイデアタブを使用して、アイデアを投稿、コメント、および投票する",
+      "社内のコミュニティに所属していて、Chatterコラボレーションに参加する必要がある",
+      "評価レベルは所属するコミュニティ全体で同じである必要がある",
+      "サポートの問題を解決するために、クラウドソースされたアンサーとナレッジ記事を検索してみつける"
+    ],
+    "answer": "A,D",
+    "explanation": "カスタマー（顧客）コミュニティライセンスに基づくユーザーは限定的な機能しか持ちませんが、「アイデアへの投稿・投票（A）」や「ナレッジ記事の検索・閲覧（D）」の利用は標準でサポートされています。",
+    "category": "サービス・サポート"
+  },
+  {
+    "question": "Universal Containers には、最上位のお客様を対象とする「特上」サポートレベルがあります。 ケースが作成されてからサービス契約に指定された期限が切れるまでの残り時間をエージェントが表示できるようにするにはどうすべきですか？",
+    "options": [
+      "連続的なマイルストンを作成する",
+      "独立したマイルストンを割り当てる",
+      "[マイルストン] 数式項目を追加する",
+      "マイルストントラッカーコンポーネントを追加する"
+    ],
+    "answer": "D",
+    "explanation": "エンタイトルメントで設定したSLA（解決までの対応時間など）が切れるまでの制限時間を、カウントダウンタイマーとしてケース画面上に表示させるには「マイルストントラッカー」コンポーネントをレイアウトに配置します。",
+    "category": "サービス・サポート"
+  },
+  {
+    "question": "Cloud Kicks のシステム管理者が Full Sandbox環境で画面に基づくリード評価フローを作成してテストし、そのフローを本番にリリースしました。 リリースされたフローを使用できるようにするための操作はどれですか？２つ選択してください。",
+    "options": [
+      "無効のフローを手動で有効にする",
+      "フローの他のバージョンを無効にする",
+      "ユーザインターフェースでApex ジョブを有効にする",
+      "プロセスとフローを有効としてリリースする"
+    ],
+    "answer": "A,D",
+    "explanation": "フローを変更セット等でリリースした際、デフォルトでは無効状態でリリースされるため本番で「手動で有効化する（A）」必要があります。あるいは、リリースツールの設定で「プロセスとフローを有効としてリリースする（D）」機能をオンにしておくことで対応可能です。（元のサイトのCは誤りです）",
+    "category": "環境管理・展開"
+  },
+  {
+    "question": "Cloud Kicks では、ユーザ権限を割り当てることはできるが、変更はできない補助的なシステム管理者を決めておきたいと考えています。 どのような方法で実施すべきですか？",
+    "options": [
+      "システム管理者権限セットグループを作成する",
+      "そのユーザをシステム管理者プロファイルに割り当てる",
+      "そのユーザを代理管理者として設定する",
+      "カスタムのシステム管理者プロファイルを設定する"
+    ],
+    "answer": "C",
+    "explanation": "特定のユーザーグループへのパスワードリセットやユーザー作成等は許可しつつ、プロファイル自体の設定変更などの強力な全体権限を与えずに部分的な管理権限のみを「委任」できるのが「代理管理者（C）」です。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "Cloud Kicks (CK) は先日、営業サイクルの正確性と効率性を最適化する目的で、コラボレーション売上予測の導入を決定しました。CK の予測営業マネージャは、予測金額に現在のバイブラインが正しく反映されていない場合、スーパーバイザとその部下がこの金額を変更できるようにしたいと考えています。 この要件を満たすために有効化すべき設定はどれですか？２つ選択してください。",
+    "options": [
+      "所有者による調整",
+      "収益調整",
+      "支払調整",
+      "マネージャによる調整"
+    ],
+    "answer": "A,D",
+    "explanation": "コラボレーション売上予測において、商談の実際の金額を変えずに予測金額だけを調整可能にするには、「所有者による調整（自分が自身の金額を調整）(A)」と「マネージャによる調整（上司が部下の金額を調整）(D)」を有効にします。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "リードを既存の取引先に変換すると、ユーザに必要な権限がないというエラーが表示されます。 ユーザがリードを既存の取引先に変換できない原因と考えられるものはどれですか？２つ選択してください。",
+    "options": [
+      "取引先の所有者がロール階層の上位のユーザである",
+      "取引先の所有者が同じロールのユーザである",
+      "取引先と取引先責任者に対する組織の共有設定が[非公開]になっている",
+      "取引先と取引先責任者に対する組織の共有設定が[親レコードに連動]になっている"
+    ],
+    "answer": "C,D",
+    "explanation": "リードの変換先として既存の取引先を指定する際、組織の共有設定が「非公開」等になっており、その取引先の参照・更新（編集）アクセス権をそもそも持っていないユーザー（ロールが下など）は変換がエラーになります。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "Cloud Kicks には、機密データを適切なユーザにのみ表示するという要件があります。ユーザオブジェクトの[Salary (給与)]項目の金額については、HR プロファイルが適用されたユーザがユーザレコードを表示している場合にのみデータを表示する必要があります。ユーザレコードを表示している他のユーザには、[Salary (給与)]項目に「Confidential (守秘情報)」というテキストが表示されるようにします。 この要件を満たすためにシステム管理者が使用すべきものはどれですか？",
+    "options": [
+      "数式項目",
+      "入力規則",
+      "プロセスビルダー",
+      "ページレイアウト"
+    ],
+    "answer": "A",
+    "explanation": "特定のプロファイル（HR）が閲覧している場合のみ金額を表示し、その他のユーザーには「Confidential」というテキストを見せるようにするには、プロファイルを判定して出力（TEXTや文字列）を分ける「数式項目（A）」を代替の表示項目として作成するのが適しています。",
+    "category": "データ管理と分析"
+  },
+  {
+    "question": "ユニバーサルコンテナ社では、商品に関連するカスタムプロセスを実装しました。「ドラフト商品」というカスタムオブジェクトがあります。ドラフト商品が承認されたら、自動化により新しい商品レコードを作成し、元のドラフト商品のレコードを削除する必要があります。 この要件を満たすオプションはどれですか？２つ選択してください。",
+    "options": [
+      "フローを呼び出すプロセスビルダー",
+      "プロセスビルダーを呼び出すフロー",
+      "Apex を呼び出すプロセスビルダー",
+      "ワークフロールールを呼び出すプロセスビルダー"
+    ],
+    "answer": "A,C",
+    "explanation": "プロセスビルダー（Process Builder）単体では、レコードの「削除」アクションをサポートしていません。そのため削除を実行するには、プロセスビルダーから「フローを呼び出す（A）」か、「Apexを呼び出す（C）」機構として実装する必要があります。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "セールスマネージャはセールスチームが所有する商談を編集したいと考えています。マネージャは商談オブジェクトに対する「編集」アクセス権を持っていません。 適切な対応方法はどれですか？",
+    "options": [
+      "商談の編集権限を設定したセットを作成し、それをユーザレコードに関連づける",
+      "「階層を使用したアクセス許可」を有効化してロール階層を再定義する",
+      "商談オブジェクトのチームセリングに「参照・更新」 アクセス権を与える",
+      "商談の組織の共有設定を「公開/参照・更新可能」に変更する"
+    ],
+    "answer": "A",
+    "explanation": "重大な誤答（B）の修正です。「オブジェクトレベルの権限（CRUD）」が欠落している場合、共有設定やロール階層を開放してもシステム上一切編集できません。これを解決するには、商談オブジェクトに「編集」権限を付与した権限セットやプロファイル設定を適用する（A）必要があります。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "Ursa Major Solar のお客様は、契約したサービスに基づいて2つのレベルのサポートを利用できます。ゴールドレベルのお客様は、2日以内にメールやチャットによるサポートを受けることができます。プラチナレベルのお客様は、2時間以内に電話やチヤットによる24時間サポートを受けることができます。 該当するサービスレベルの期限内にサポートエージェントが確実に対応するために、システム管理者が設定すべきものはどれですか？",
+    "options": [
+      "エンタイトルメントプロセス",
+      "割り当てルール",
+      "オムニチャネル",
+      "エスカレーションルール"
+    ],
+    "answer": "A",
+    "explanation": "取引先ごとのサポートランク（ゴールド、プラチナなど）に応じて異なるSLA期限（2日以内、2時間以内など）を自動制御し担当者へ通知・徹底するには「エンタイトルメントプロセス」を使用します。",
+    "category": "サービス・サポート"
+  },
+  {
+    "question": "Cloud Kicks のシステム管理者が Sandbox で新しい Shoe (シューズ) オブジェクトを作成し、Laces (靴ひも) と Finish (仕上がり)という2つのカスタム項目を設定しました。そして、このカスタムオブジェクト全体をSandbox から本番インスタンスにリリースする準備をしています。 このカスタムオブジェクトを本番に適切にリリースするために、システム管理者が実行すべきことは何ですか？",
+    "options": [
+      "カスタムオブジェクトをリリースし、カスタム項目を手動で作成し直す",
+      "本番でカスタムオブジェクトとカスタム項目を手動で作成する",
+      "カスタムオブジェクトを変更セットに含める",
+      "カスタムオブジェクトとカスタム項目を変更セットに追加する"
+    ],
+    "answer": "D",
+    "explanation": "変更セットを使用してカスタムオブジェクトをリリースする際、オブジェクト自体を含めてもカスタム項目は自動的には追加されません。必要なカスタム項目もすべて「手動で」変更セットに追加する（D）必要があります。",
+    "category": "オブジェクト構成"
+  },
+  {
+    "question": "ユニバーサルコンテナ社では、取引先オブジェクトの地域と地区の間に選択リストの連動関係を設定しました。ユーザが地域を選択した場合ににも地区も選択必須となるようにしてほしいとマネージャから依頼されました。 これを実現するにはどうすればよいでしょうか？",
+    "options": [
+      "ページレイアウトで地区項目を必須にする",
+      "両方の選択リスト項目を項目レベルで必須にする",
+      "ISBLANK() を使用した入力規則を作成する",
+      "両方の選択リスト項目にデフォルト値を設定する"
+    ],
+    "answer": "C",
+    "explanation": "連動選択リストにおいて「親（地域）が選ばれた時は、子（地区）も必ず選択しなければならない」という動的な必須チェックは、ISBLANK関数を組み合わせた「入力規則（Validation Rule）(C)」を使用することで実現できます。",
+    "category": "自動化プロセス"
+  },
+  {
+    "question": "ユニバーサルコンテナ社のサポートデスクには、3つの異なるプロファイルがあります。サポート担当VP は、サポートデスクユーザーのプロファイルのみを再割り当てする許可をリクエストしています。 このアクセスはどのように付与しますか？",
+    "options": [
+      "システム管理者プロファイル",
+      "３つのプロファイルに対する代理管理者権限",
+      "ユーザの管理権限を付与したプロファイル",
+      "ユーザの管理権限を付与した権限セット"
+    ],
+    "answer": "B",
+    "explanation": "元の解答（D）は誤りです。Salesforce全体の『全ユーザーの管理権限』を与えずに、一部の特定プロファイル（サポートデスク）のユーザー管理権限だけをそのVPへ付与するには、対象のプロファイル限定で変更を許可できる「代理管理者（Delegated Admin）（B）」を使用するのが正解です。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "営業 VP が Bonus Amount (ボーナス金額) カスタム項目を取引先ごとに集計したレポートを表示したいと考えていますが、集計項目を作成する機能がグレー表示になっています。 カスタムの集計項目を利用するために、システム管理者が調整する必要のあることはどれですか？",
+    "options": [
+      "検索条件ロジックを追加する",
+      "バケット項目を作成する",
+      "データをグループ化する",
+      "列を並び替える"
+    ],
+    "answer": "C",
+    "explanation": "レポートの「カスタム集計項目（Summary Formula）」ボタンがグレーアウトして利用できない場合、そのレポートが表形式のままで「グループ化」されていないことが原因です。行・または列をグループ化する（サマリーなどの形式にする）ことで有効になります。",
+    "category": "データ管理と分析"
+  },
+  {
+    "question": "商談成立時に出荷日項目にデータを入力させたい場合の対応は？",
+    "options": [
+      "ISBLANK()関数を使用して、商談の入力規則を作成する",
+      "商談フェーズの変更時にワークフロールールでデフォルト値を設定する",
+      "ページレイアウトで出荷日項目を必須に設定する",
+      "プロセスビルダーで出荷日が空の場合にエラーを返す"
+    ],
+    "answer": "A,B",
+    "explanation": "`AND(ISPICKVAL(StageName, \"Closed Won\"), ISBLANK(ShippingDate__c))` のような入力規則で商談成立時に出荷日を必須にする。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "商談の所有者だけがフェーズを変更できるようにする入力規則の条件数式は？",
+    "options": [
+      "`AND(ISCHANGED(StageName), $Profile.Name <> \"Sales Manager\")`",
+      "`AND(ISCHANGED(StageName), CreatedById <> $User.Id)`",
+      "`AND(ISCHANGED(StageName), $User.Role <> \"Sales\")`",
+      "`AND(ISCHANGED(StageName), OwnerId <> $User.Id)`"
+    ],
+    "answer": "A,C,D,E",
+    "explanation": "フェーズが変更され、かつ現在のユーザーが所有者でない場合にエラーを表示する。",
+    "category": "データ管理と分析"
+  },
+  {
+    "question": "コラボレーション売上予測で可能なことは？（3つ選択）",
+    "options": [
+      "売上予測階層を自動的にロール階層から独立して作成する",
+      "売上予測分類名を変更する",
+      "カスタムの売上予測期間を12ヶ月を超えて設定する",
+      "商談の分割を使用して予測する",
+      "デフォルトの売上予測通貨設定を選択する"
+    ],
+    "answer": "B,D,E",
+    "explanation": "分類名の変更、商談分割での予測、デフォルト通貨の設定が可能。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "4つの各営業地域VPへ、月曜朝に個別データのダッシュボードを配信する方法は？",
+    "options": [
+      "4つの動的ダッシュボードを作成し、各VPにメールで手動送信する",
+      "各地域を条件に設定したダッシュボードを1つ作成してスケジュール設定する",
+      "4つの個別ダッシュボードを作成し、それぞれにスケジュール設定する",
+      "結合レポートを作成し、レポート実行スナップショットをスケジュールする"
+    ],
+    "answer": "B",
+    "explanation": "",
+    "category": "データ管理と分析"
+  },
+  {
+    "question": "ロールを変更した際、所有者に基づく共有ルールへの影響は？",
+    "options": [
+      "所有者に基づく共有ルールは手動で再適用する必要がある",
+      "所有者に基づく共有ルールは変更されない",
+      "所有者に基づく共有ルールはすべて再適用される",
+      "所有者に基づく共有ルールは削除される"
+    ],
+    "answer": "C",
+    "explanation": "",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "Sandbox環境へ本番ライセンス情報を最小限のインパクトで反映させる方法は？",
+    "options": [
+      "本番ライセンスに一致機能を使用する",
+      "Sandboxを更新（リフレッシュ）する",
+      "ライセンス情報を変更セットでリリースする",
+      "手動でSandboxのライセンスを再設定する"
+    ],
+    "answer": "A",
+    "explanation": "",
+    "category": "環境管理・展開"
+  },
+  {
+    "question": "パートナーコミュニティの考慮事項は？（2つ選択）",
+    "options": [
+      "最大100個のコミュニティ制限にはアクティブ、非アクティブ、プレビューが含まれる",
+      "パートナーコミュニティではカスタムオブジェクトを使用できない",
+      "メンバーベースまたはログインベースのライセンスを選択できる",
+      "パートナーユーザーはレポートとダッシュボードにアクセスできない"
+    ],
+    "answer": "A,C",
+    "explanation": "",
+    "category": "設定と構成"
+  },
+  {
+    "question": "取引先に取引先責任者の数を表示させたい（メールマーケティング用）場合の対応は？",
+    "options": [
+      "取引先に積み上げ集計項目を作成する",
+      "取引先責任者レポートを作成してダッシュボードに表示する",
+      "取引先に数式項目を作成してカウントする",
+      "取引先にカスタム項目を作成し、Apexトリガを使用して追加・削除時に更新する"
+    ],
+    "answer": "A,D",
+    "explanation": "標準の積み上げ集計は取引先と取引先責任者間では使用不可のためApexが必要。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "Salesforceコンソールのチャット機能で正しいのは？（3つ選択）",
+    "options": [
+      "ナレッジ記事検索に記事ツールを使用できる",
+      "訪問者情報を詳細タブで参照できる",
+      "チャットを別のエージェントに転送できる",
+      "チャットセッション中にケースを自動的に作成できない",
+      "チャットの会話記録はケースに添付できない"
+    ],
+    "answer": "A,B,C",
+    "explanation": "",
+    "category": "サービス・サポート"
+  },
+  {
+    "question": "ケースとバグを関連付け、バグ作成にはケースが必須となるリレーションは？",
+    "options": [
+      "参照関係",
+      "階層関係",
+      "主従関係",
+      "外部参照関係"
+    ],
+    "answer": "C",
+    "explanation": "主従関係では親レコード（ケース）が必須になる。",
+    "category": "サービス・サポート"
+  },
+  {
+    "question": "売上予測金額をマネージャとその部下が変更できるようにするための設定は？（2つ選択）",
+    "options": [
+      "所有者による調整",
+      "売上予測階層による調整",
+      "商談チームによる調整",
+      "マネージャによる調整"
+    ],
+    "answer": "A,D",
+    "explanation": "所有者による調整とマネージャによる調整を有効にする。",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "特定レコード保存時のApexトリガーエラーの詳細情報を収集する方法は？",
+    "options": [
+      "ワークフロールールのデバッグオプションを有効にする",
+      "ユーザーに対するデバッグログを有効にする",
+      "メールログを確認する",
+      "設定変更履歴を確認する"
+    ],
+    "answer": "B",
+    "explanation": "",
+    "category": "設定と構成"
+  },
+  {
+    "question": "特定アプリケーションへのアクセスを許可するために使用すべき機能は？",
+    "options": [
+      "プロファイルベースのアクセス制御",
+      "ログインフローによる制限",
+      "セッションベースの権限セット",
+      "IPアドレス制限付きのプロファイル"
+    ],
+    "answer": "C",
+    "explanation": "セッションベースで有効化される権限セットで、特定のセッション中のみアクセスを付与。",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "営業担当が売上予測に含まれていない場合のトラブルシューティングは？",
+    "options": [
+      "売上予測階層にユーザーのロールを追加する",
+      "ユーザの一般情報の下にある「売上予測を許可」をオンにする",
+      "ユーザーのプロファイルに売上予測タブへのアクセスを追加する",
+      "売上予測の共有設定を「公開」に変更する"
+    ],
+    "answer": "B",
+    "explanation": "",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "特定のプロファイルには給与を表示し、他には「守秘情報」と表示させたい場合の方法は？",
+    "options": [
+      "数式項目",
+      "項目レベルセキュリティ",
+      "ページレイアウト",
+      "レコードタイプ"
+    ],
+    "answer": "A",
+    "explanation": "`IF($Profile.Name = \"HR Manager\", Salary__c, \"守秘情報\")` のような数式項目で制御。",
+    "category": "データ管理と分析"
+  },
+  {
+    "question": "承認後に自動で新レコード作成と旧レコード削除を行うオプションは？（2つ選択）",
+    "options": [
+      "フローを呼び出すプロセスビルダー",
+      "承認プロセスの最終承認アクションに項目自動更新を追加する",
+      "Apexを呼び出すプロセスビルダー",
+      "承認後にワークフロールールでメール通知を送信する"
+    ],
+    "answer": "A,C",
+    "explanation": "",
+    "category": "設定と構成"
+  },
+  {
+    "question": "編集アクセス権がないマネージャに商談チーム所有の商談を編集させる方法は？",
+    "options": [
+      "マネージャを商談チームのメンバーとして追加する",
+      "「階層を使用したアクセス許可」を有効化してロール階層を再定義する",
+      "商談の共有設定を「公開/参照・更新可能」に変更する",
+      "マネージャのプロファイルに「すべてのデータの編集」権限を付与する"
+    ],
+    "answer": "B",
+    "explanation": "",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "特定レコードタイプへのアクセスを、プロファイルが異なる5人のユーザに制限する方法は？",
+    "options": [
+      "各ユーザーのプロファイルにレコードタイプを割り当てる",
+      "権限セットを作成してレコードタイプへのアクセスを付与する",
+      "公開グループを作成し、基準に基づく共有ルールを使用して共有する",
+      "ロール階層を使用してアクセスを制御する"
+    ],
+    "answer": "C",
+    "explanation": "",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "リストビューには重複があるが、コンポーネントに表示されない場合の改善策は？",
+    "options": [
+      "重複ジョブ",
+      "重複ルールを再有効化する",
+      "一致ルールを更新する",
+      "レポートで重複を検出する"
+    ],
+    "answer": "A",
+    "explanation": "重複ジョブを実行して既存レコードの重複をスキャンし、コンポーネントに反映させる。",
+    "category": "データ管理と分析"
+  },
+  {
+    "question": "リード状況変更の所要時間を報告し、クリック数を減らしたい場合の方法は？",
+    "options": [
+      "リード状況項目の項目履歴管理を有効にして、その項目に基づいてレポートを作成する",
+      "カスタムの日時項目を作成し、ワークフロールールで更新する",
+      "Apexバッチジョブでリードの状況変更時間を計算する",
+      "プロセスビルダーで状況変更ごとにログレコードを作成する"
+    ],
+    "answer": "A",
+    "explanation": "",
+    "category": "営業・マーケティング"
+  },
+  {
+    "question": "カスタムオブジェクトに他の同じオブジェクトのレコードを参照する項目を追加したい場合の方法は？",
+    "options": [
+      "主従関係",
+      "外部参照関係",
+      "連結関係（自己参照）",
+      "階層関係"
+    ],
+    "answer": "C",
+    "explanation": "",
+    "category": "オブジェクト構成"
+  },
+  {
+    "question": "申込がないすべての募集職種を示すレポートの作成方法は？",
+    "options": [
+      "募集職種と申込のカスタムレポートタイプを作成し、左外部結合を使用する",
+      "募集職種と申込の結合レポートを作成する",
+      "申込レポートで募集職種ごとにグループ化し、カウントが0の項目を表示する",
+      "クロス条件付きの標準の募集職種レポートタイプを使用する"
+    ],
+    "answer": "D",
+    "explanation": "",
+    "category": "データ管理と分析"
+  },
+  {
+    "question": "各求人情報への申込数を計算するためのノーコードソリューションで作成すべきフィールドは？",
+    "options": [
+      "数式項目",
+      "参照関係",
+      "ワークフロールールによるカウント項目",
+      "主従関係"
+    ],
+    "answer": "D",
+    "explanation": "主従関係を作成することで親オブジェクトに積み上げ集計項目（COUNT）を設定可能。",
+    "category": "オブジェクト構成"
+  },
+  {
+    "question": "特定プロファイルのみ再割り当てする許可を与える方法は？",
+    "options": [
+      "プロファイルに「すべてのデータの編集」権限を追加する",
+      "代理管理者として設定する",
+      "カスタムの承認プロセスを作成する",
+      "ユーザの管理権限を付与した権限セット"
+    ],
+    "answer": "D",
+    "explanation": "",
+    "category": "権限・セキュリティ"
+  },
+  {
+    "question": "レポートで集計項目を作成する機能がグレー表示されている場合の調整は？",
+    "options": [
+      "レポートの種類をマトリックスレポートに変更する",
+      "レポートに項目を追加する",
+      "データをグループ化する",
+      "レポートの実行権限を確認する"
+    ],
+    "answer": "C",
+    "explanation": "集計項目はレポートがグループ化（サマリーまたはマトリックス形式）されている場合にのみ使用可能。",
+    "category": "データ管理と分析"
+  },
+  {
+    "question": "商談、取引先、関連ケースをダッシュボードに表示する適切な方法は？",
+    "options": [
+      "動的ダッシュボードを作成し、VPが「私のチームのダッシュボードの参照」権限を持つようにする",
+      "結合レポートを使用してすべてのデータを1つのレポートに統合する",
+      "各オブジェクトごとに別々のダッシュボードを作成する",
+      "ダッシュボードを作成し、ユーザ、商談、取引先、およびケースの条件を追加する"
+    ],
+    "answer": "A",
+    "explanation": "",
+    "category": "データ管理と分析"
+  },
+  {
+    "question": "カスタムオブジェクトとカスタム項目をSandboxから本番へリリースする方法は？",
+    "options": [
+      "データローダを使用してメタデータをエクスポートし、本番にインポートする",
+      "Ant移行ツールを使用してメタデータを移行する",
+      "手動で本番環境にカスタムオブジェクトを再作成する",
+      "カスタムオブジェクトとカスタム項目を変更セットに追加する"
+    ],
+    "answer": "D",
+    "explanation": "",
+    "category": "環境管理・展開"
+  },
+  {
+    "question": "昨年成立した商談が1件もない取引先のレポートを作成する方法は？",
+    "options": [
+      "取引先と商談のカスタムレポートタイプを作成し、外部結合を使用する",
+      "商談レポートで取引先ごとにグループ化し、フィルタリングする",
+      "取引先レポートタイプを使用し、商談を使用したクロス条件を追加する",
+      "結合レポートで取引先と商談を表示する"
+    ],
+    "answer": "C",
+    "explanation": "クロス条件で「商談が存在しない」条件を設定。",
+    "category": "営業・マーケティング"
+  }
+];</script>
+<script>
+// Ensure testData is loaded
+if (typeof testData === 'undefined') {
+    alert("Error: testData (questions) not loaded. Ensure questions.js is included.");
+}
+
+// Variables & State
+let currentQuestionIndex = 0;
+let userAnswers = {}; // { index: { selected: [], correct: bool } }
+let correctCount = 0;
+let answeredCount = 0;
+let isAnswered = false;
+let startTime = null;
+
+const questions = testData;
+const STORAGE_KEY = 'sf_admin_quiz_progress_v1';
+
+const DOM = {
+    app: document.getElementById('app'),
+    scoreDisplay: document.getElementById('score-display'),
+    progressDisplay: document.getElementById('progress-display'),
+    progressBar: document.getElementById('progress-bar'),
+    questionTitle: document.getElementById('question-title'),
+    questionText: document.getElementById('question-text'),
+    optionsContainer: document.getElementById('options-container'),
+    feedbackBox: document.getElementById('feedback-box'),
+    btnPrev: document.getElementById('btn-prev'),
+    btnSubmit: document.getElementById('btn-submit'),
+    btnNext: document.getElementById('btn-next'),
+    quizContainer: document.querySelector('.quiz-container')
+};
+
+function letterToIndex(letter) {
+    return letter.toUpperCase().charCodeAt(0) - 65;
+}
+
+function indexToLetter(index) {
+    return String.fromCharCode(65 + index);
+}
+
+function saveProgress() {
+    const data = {
+        currentQuestionIndex,
+        userAnswers,
+        correctCount,
+        answeredCount,
+        startTime: startTime || Date.now()
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function loadProgress() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+        const data = JSON.parse(saved);
+        currentQuestionIndex = data.currentQuestionIndex || 0;
+        userAnswers = data.userAnswers || {};
+        correctCount = data.correctCount || 0;
+        answeredCount = data.answeredCount || 0;
+        startTime = data.startTime || Date.now();
+        return true;
+    }
+    return false;
+}
+
+function initQuiz() {
+    const hasProgress = loadProgress();
+    if (!startTime) startTime = Date.now();
+    
+    if (hasProgress && answeredCount === questions.length) {
+        showResult();
+    } else {
+        loadQuestion(currentQuestionIndex);
+        updateStats();
+    }
+}
+
+function updateStats() {
+    DOM.scoreDisplay.textContent = `Score: ${correctCount} / ${answeredCount}`;
+    DOM.progressDisplay.textContent = `Question: ${currentQuestionIndex + 1} / ${questions.length}`;
+    const progress = ((currentQuestionIndex) / questions.length) * 100;
+    DOM.progressBar.style.width = `${progress}%`;
+}
+
+function loadQuestion(index) {
+    const q = questions[index];
+    const prevResult = userAnswers[index];
+    
+    // Check if multi-choice
+    const correctAnswers = q.answer.split(',').map(s => s.trim()).filter(Boolean);
+    const isMultiChoice = correctAnswers.length > 1;
+    
+    DOM.questionTitle.textContent = `Question ${index + 1} ${isMultiChoice ? '(Multiple Choice)' : ''}`;
+    DOM.questionText.textContent = q.question;
+    DOM.optionsContainer.innerHTML = '';
+    DOM.feedbackBox.style.display = 'none';
+    
+    if (index === 0) DOM.btnPrev.disabled = true;
+    else DOM.btnPrev.disabled = false;
+
+    q.options.forEach((optText, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.dataset.index = i;
+        const labelStr = indexToLetter(i);
+        btn.innerHTML = `<span class="option-label">${labelStr}.</span> <span class="option-text">${optText}</span>`;
+        
+        if (prevResult) {
+            // Already answered
+            btn.classList.add('disabled');
+            const correctIndices = correctAnswers.map(l => letterToIndex(l));
+            if (correctIndices.includes(i)) btn.classList.add('correct');
+            if (prevResult.selected.includes(i) && !correctIndices.includes(i)) btn.classList.add('incorrect');
+            if (prevResult.selected.includes(i)) btn.classList.add('selected');
+        } else {
+            btn.addEventListener('click', () => handleOptionClick(btn, isMultiChoice));
+        }
+        DOM.optionsContainer.appendChild(btn);
+    });
+
+    if (prevResult) {
+        isAnswered = true;
+        showFeedback(prevResult.correct, q);
+        DOM.btnSubmit.style.display = 'none';
+        DOM.btnNext.style.display = 'inline-block';
+    } else {
+        isAnswered = false;
+        DOM.btnSubmit.style.display = 'inline-block';
+        DOM.btnNext.style.display = 'none';
+        DOM.btnSubmit.disabled = true;
+    }
+}
+
+function handleOptionClick(btn, isMultiChoice) {
+    if (isAnswered) return;
+    if (isMultiChoice) {
+        btn.classList.toggle('selected');
+    } else {
+        Array.from(DOM.optionsContainer.children).forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+    }
+    const anySelected = DOM.optionsContainer.querySelector('.selected');
+    DOM.btnSubmit.disabled = !anySelected;
+}
+
+function submitAnswer() {
+    if (isAnswered) return;
+    isAnswered = true;
+    
+    const q = questions[currentQuestionIndex];
+    const correctLetterArray = q.answer.split(',').map(s => s.trim().toUpperCase()).filter(Boolean);
+    const correctIndices = correctLetterArray.map(l => letterToIndex(l));
+    
+    const buttons = Array.from(DOM.optionsContainer.children);
+    const selectedIndices = buttons.filter(b => b.classList.contains('selected')).map(b => parseInt(b.dataset.index));
+    
+    const isCorrect = 
+        selectedIndices.length === correctIndices.length &&
+        selectedIndices.every(val => correctIndices.includes(val));
+    
+    // Save result
+    userAnswers[currentQuestionIndex] = {
+        selected: selectedIndices,
+        correct: isCorrect
+    };
+    
+    buttons.forEach(b => {
+        b.classList.add('disabled');
+        const i = parseInt(b.dataset.index);
+        if (correctIndices.includes(i)) b.classList.add('correct');
+        else if (selectedIndices.includes(i)) b.classList.add('incorrect');
+    });
+    
+    if (isCorrect) correctCount++;
+    answeredCount++;
+    
+    showFeedback(isCorrect, q);
+    updateStats();
+    saveProgress();
+    
+    DOM.btnSubmit.style.display = 'none';
+    DOM.btnNext.style.display = 'inline-block';
+}
+
+function showFeedback(isCorrect, q) {
+    DOM.feedbackBox.style.display = 'block';
+    DOM.feedbackBox.className = `feedback-box ${isCorrect ? 'feedback-correct' : 'feedback-incorrect'}`;
+    let content = `<strong>${isCorrect ? '正解！' : '不正解！'}</strong> <span style="font-size:0.8rem; opacity:0.8">カテゴリ: ${q.category || '一般'}</span><br>正答: ${q.answer}`;
+    if (q.explanation) content += `<br><br><strong>【解説】</strong><br>${q.explanation}`;
+    DOM.feedbackBox.innerHTML = content;
+}
+
+function nextQuestion() {
+    if (currentQuestionIndex < questions.length - 1) {
+        currentQuestionIndex++;
+        loadQuestion(currentQuestionIndex);
+        updateStats();
+        saveProgress();
+    } else {
+        showResult();
+    }
+}
+
+function prevQuestion() {
+    if (currentQuestionIndex > 0) {
+        currentQuestionIndex--;
+        loadQuestion(currentQuestionIndex);
+        updateStats();
+    }
+}
+
+function showResult() {
+    DOM.quizContainer.style.display = 'none';
+    const durationMin = Math.round((Date.now() - startTime) / 60000);
+    const scoreRate = Math.round((correctCount / questions.length) * 100);
+    const passThreshold = 65;
+    const isPass = scoreRate >= passThreshold;
+    
+    const catStats = {};
+    questions.forEach((q, i) => {
+        const cat = q.category || '一般';
+        if (!catStats[cat]) catStats[cat] = { total: 0, correct: 0 };
+        catStats[cat].total++;
+        if (userAnswers[i] && userAnswers[i].correct) catStats[cat].correct++;
+    });
+
+    const sortedCats = Object.keys(catStats).map(c => ({ name: c, rate: Math.round((catStats[c].correct / catStats[c].total) * 100) })).sort((a,b) => a.rate - b.rate);
+    const weakest = sortedCats.slice(0, 2);
+    const strongest = sortedCats.slice(-2).reverse();
+
+    let resultHtml = `
+    <div class="results-view">
+        <div class="result-card">
+            <div class="pass-fail-banner ${isPass ? 'pass-banner' : 'fail-banner'}">
+                ${isPass ? 'PASS - 合格圏内' : 'FAIL - 復習が必要です'}
+            </div>
+            <h2>試験結果レポート</h2>
+            <div class="stat-grid">
+                <div class="stat-item"><span class="stat-value">${correctCount} / ${questions.length}</span><span class="stat-label">正解数</span></div>
+                <div class="stat-item"><span class="stat-value">${scoreRate}%</span><span class="stat-label">正解率</span></div>
+                <div class="stat-item"><span class="stat-value">${durationMin}分</span><span class="stat-label">学習時間</span></div>
+            </div>
+            
+            <div class="priority-box">
+                <h4><span style="font-size:1.2rem">⚠️</span> 重点復習エリア</h4>
+                <p>以下のカテゴリの正解率が低くなっています。関連するヘルプドキュメントを確認してください：</p>
+                <ul>
+                    ${weakest.map(w => `<li><strong>${w.name}</strong> (${w.rate}%)</li>`).join('')}
+                </ul>
+            </div>
+        </div>
+
+        <div class="glass-panel">
+            <h3>カテゴリ別分析</h3>
+            <div class="category-stats">
+                <table>
+                    <thead><tr><th>カテゴリ</th><th>正解数</th><th>比率</th></tr></thead>
+                    <tbody>
+                        ${sortedCats.map(c => `<tr><td>${c.name}</td><td>${catStats[c.name].correct}/${catStats[c.name].total}</td><td>${c.rate}%</td></tr>`).join('')}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="glass-panel">
+            <h3>解答履歴一覧</h3>
+            <div class="history-scroll">
+                <table class="answer-history-table">
+                    <thead><tr><th>No</th><th>カテゴリ</th><th>結果</th><th>あなたの解答</th><th>正答</th></tr></thead>
+                    <tbody>
+                        ${questions.map((q, i) => {
+                            const ans = userAnswers[i];
+                            const selectedStr = ans ? ans.selected.map(idx => indexToLetter(idx)).join(',') : '-';
+                            return `<tr>
+                                <td>${i+1}</td>
+                                <td style="font-size:0.7rem">${q.category}</td>
+                                <td class="${ans && ans.correct ? 'icon-correct' : 'icon-incorrect'}">${ans && ans.correct ? '○' : '×'}</td>
+                                <td>${selectedStr}</td>
+                                <td>${q.answer}</td>
+                            </tr>`;
+                        }).join('')}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="glass-panel">
+            <h3>知識ポイントのまとめ</h3>
+            <div class="knowledge-summary">
+                ${questions.filter((q, i) => userAnswers[i] && !userAnswers[i].correct).map((q, i) => `
+                    <div class="knowledge-point">
+                        <span class="kp-title">Q${questions.indexOf(q) + 1}: ${q.question.substring(0, 80)}...</span>
+                        <div class="kp-content"><strong>正解: ${q.answer}</strong><br>${q.explanation}</div>
+                    </div>
+                `).join('') || '<p>間違えた問題はありません。完璧です！</p>'}
+            </div>
+        </div>
+
+        <div style="margin-bottom: 3rem; text-align: center;">
+            <button class="btn btn-primary btn-reset" onclick="resetQuiz()">回答をリセットして再挑戦</button>
+        </div>
+    </div>`;
+
+    let resDiv = document.createElement('div');
+    resDiv.id = 'results-screen';
+    resDiv.innerHTML = resultHtml;
+    DOM.app.appendChild(resDiv);
+}
+
+function resetQuiz() {
+    if (confirm('回答履歴をリセットして最初からやり直しますか？')) {
+        localStorage.removeItem(STORAGE_KEY);
+        location.reload();
+    }
+}
+
+DOM.btnSubmit.addEventListener('click', submitAnswer);
+DOM.btnNext.addEventListener('click', nextQuestion);
+DOM.btnPrev.addEventListener('click', prevQuestion);
+
+const glossaryToggle = document.getElementById('glossary-toggle');
+const glossaryBody = document.getElementById('glossary-body');
+glossaryToggle.addEventListener('click', () => {
+    const isShow = glossaryBody.classList.toggle('show');
+    glossaryToggle.innerHTML = isShow ? '<span class="arrow">▲</span> 重要用語集を閉じる' : '<span class="arrow">▼</span> 重要用語集を表示';
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    if(questions && questions.length > 0) {
+        initQuiz();
+    } else {
+        DOM.questionTitle.textContent = "No questions found!";
+    }
+});
+    </script>
+</body>
+</html>
