@@ -244,9 +244,42 @@ h1 {
     background: rgba(255, 255, 255, 0.15);
 }
 
+.controls-extra {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--glass-border);
+}
+
+.btn-accent {
+    background: #8b5cf6;
+    color: white;
+    box-shadow: 0 4px 14px 0 rgba(139, 92, 246, 0.3);
+}
+
+.btn-accent:hover:not(:disabled) {
+    background: #7c3aed;
+    transform: translateY(-1px);
+}
+
+.btn-danger-outline {
+    background: transparent;
+    color: var(--danger);
+    border: 1px solid var(--danger);
+}
+
+.btn-danger-outline:hover:not(:disabled) {
+    background: var(--danger-bg);
+}
+
 @media (max-width: 600px) {
     .controls {
         flex-direction: column;
+    }
+    .controls-extra {
+        flex-direction: row;
     }
     .btn {
         width: 100%;
@@ -457,6 +490,27 @@ tr:hover td {
 .icon-correct { color: var(--success); font-weight: bold; }
 .icon-incorrect { color: var(--danger); font-weight: bold; }
 
+.multi-choice-badge {
+    background: var(--danger);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+}
+
+.history-link {
+    color: #60a5fa;
+    text-decoration: underline;
+    cursor: pointer;
+    font-weight: 600;
+}
+.history-link:hover {
+    color: #93c5fd;
+}
+
 .history-scroll {
     max-height: 400px;
     overflow-y: auto;
@@ -472,7 +526,7 @@ tr:hover td {
             <h1>Salesforce Admin II Prep Exam</h1>
             <div class="header-stats">
                 <span id="score-display">Score: 0 / 0</span>
-                <span id="progress-display">Question: 1 / 132</span>
+                <span id="progress-display">Question: 1 / 129</span>
             </div>
             <div class="progress-bar-container">
                 <div id="progress-bar"></div>
@@ -526,6 +580,10 @@ tr:hover td {
                     <button class="btn btn-secondary" id="btn-prev" disabled>Previous</button>
                     <button class="btn btn-primary" id="btn-submit">Submit Answer</button>
                     <button class="btn btn-primary" id="btn-next" style="display: none;">Next Question</button>
+                </div>
+                <div class="controls-extra">
+                    <button class="btn btn-accent" id="btn-show-result" onclick="showResult()">Result</button>
+                    <button class="btn btn-danger-outline" id="btn-reset" onclick="resetQuiz()">Reset</button>
                 </div>
             </div>
         </main>
@@ -794,8 +852,8 @@ const testData = [
       "時間ベースのワークフローの監視",
       "一時停止中のフローインタビューリスト"
     ],
-    "answer": "B,C,D",
-    "explanation": "テリトリーマネージャーは、テリトリー内の取引先に対してフルアクセスを持ちます。その取引先に関連する「商談」に対しては、テリトリー設定にもよりますが一般的に「参照（D）」「編集（B）」「所有者の変更/移行（C）」のアクセス権が付与されます。",
+    "answer": "A,C",
+    "explanation": "商談成立時のプロセスで活動が欠落している問題を調査するには、「デバッグログ（A）」でプロセスビルダーやフローの実行状況を追跡し、「時間ベースのワークフローの監視（C）」で時間ベースアクションがキューに残っていないか確認します。",
     "category": "営業・マーケティング"
   },
   {
@@ -1810,22 +1868,9 @@ const testData = [
       "`AND(ISCHANGED(StageName), $User.Role <> \"Sales\")`",
       "`AND(ISCHANGED(StageName), OwnerId <> $User.Id)`"
     ],
-    "answer": "A,C,D,E",
+    "answer": "D",
     "explanation": "フェーズが変更され、かつ現在のユーザーが所有者でない場合にエラーを表示する。",
     "category": "データ管理と分析"
-  },
-  {
-    "question": "コラボレーション売上予測で可能なことは？（3つ選択）",
-    "options": [
-      "売上予測階層を自動的にロール階層から独立して作成する",
-      "売上予測分類名を変更する",
-      "カスタムの売上予測期間を12ヶ月を超えて設定する",
-      "商談の分割を使用して予測する",
-      "デフォルトの売上予測通貨設定を選択する"
-    ],
-    "answer": "B,D,E",
-    "explanation": "分類名の変更、商談分割での予測、デフォルト通貨の設定が可能。",
-    "category": "営業・マーケティング"
   },
   {
     "question": "4つの各営業地域VPへ、月曜朝に個別データのダッシュボードを配信する方法は？",
@@ -1835,8 +1880,8 @@ const testData = [
       "4つの個別ダッシュボードを作成し、それぞれにスケジュール設定する",
       "結合レポートを作成し、レポート実行スナップショットをスケジュールする"
     ],
-    "answer": "B",
-    "explanation": "",
+    "answer": "C",
+    "explanation": "動的ダッシュボードはスケジュール配信できません。各VPに個別データを配信するには、VPごとに個別のダッシュボードを作成してスケジュール設定する必要があります。",
     "category": "データ管理と分析"
   },
   {
@@ -1886,19 +1931,6 @@ const testData = [
     "answer": "A,D",
     "explanation": "標準の積み上げ集計は取引先と取引先責任者間では使用不可のためApexが必要。",
     "category": "営業・マーケティング"
-  },
-  {
-    "question": "Salesforceコンソールのチャット機能で正しいのは？（3つ選択）",
-    "options": [
-      "ナレッジ記事検索に記事ツールを使用できる",
-      "訪問者情報を詳細タブで参照できる",
-      "チャットを別のエージェントに転送できる",
-      "チャットセッション中にケースを自動的に作成できない",
-      "チャットの会話記録はケースに添付できない"
-    ],
-    "answer": "A,B,C",
-    "explanation": "",
-    "category": "サービス・サポート"
   },
   {
     "question": "ケースとバグを関連付け、バグ作成にはケースが必須となるリレーションは？",
@@ -2031,18 +2063,6 @@ const testData = [
     "answer": "A",
     "explanation": "",
     "category": "営業・マーケティング"
-  },
-  {
-    "question": "カスタムオブジェクトに他の同じオブジェクトのレコードを参照する項目を追加したい場合の方法は？",
-    "options": [
-      "主従関係",
-      "外部参照関係",
-      "連結関係（自己参照）",
-      "階層関係"
-    ],
-    "answer": "C",
-    "explanation": "",
-    "category": "オブジェクト構成"
   },
   {
     "question": "申込がないすべての募集職種を示すレポートの作成方法は？",
@@ -2392,8 +2412,8 @@ const testData = [
       "時間ベースのワークフローの監視",
       "一時停止中のフローインタビューリスト"
     ],
-    "answer": "B,C,D",
-    "explanation": "テリトリーマネージャーは、テリトリー内の取引先に対してフルアクセスを持ちます。その取引先に関連する「商談」に対しては、テリトリー設定にもよりますが一般的に「参照（D）」「編集（B）」「所有者の変更/移行（C）」のアクセス権が付与されます。",
+    "answer": "A,C",
+    "explanation": "商談成立時のプロセスで活動が欠落している問題を調査するには、「デバッグログ（A）」でプロセスビルダーやフローの実行状況を追跡し、「時間ベースのワークフローの監視（C）」で時間ベースアクションがキューに残っていないか確認します。",
     "category": "営業・マーケティング"
   },
   {
@@ -3408,7 +3428,7 @@ const testData = [
       "`AND(ISCHANGED(StageName), $User.Role <> \"Sales\")`",
       "`AND(ISCHANGED(StageName), OwnerId <> $User.Id)`"
     ],
-    "answer": "A,C,D,E",
+    "answer": "D",
     "explanation": "フェーズが変更され、かつ現在のユーザーが所有者でない場合にエラーを表示する。",
     "category": "データ管理と分析"
   },
@@ -3433,8 +3453,8 @@ const testData = [
       "4つの個別ダッシュボードを作成し、それぞれにスケジュール設定する",
       "結合レポートを作成し、レポート実行スナップショットをスケジュールする"
     ],
-    "answer": "B",
-    "explanation": "",
+    "answer": "C",
+    "explanation": "動的ダッシュボードはスケジュール配信できません。各VPに個別データを配信するには、VPごとに個別のダッシュボードを作成してスケジュール設定する必要があります。",
     "category": "データ管理と分析"
   },
   {
@@ -3819,7 +3839,7 @@ function loadQuestion(index) {
     const correctAnswers = q.answer.split(',').map(s => s.trim()).filter(Boolean);
     const isMultiChoice = correctAnswers.length > 1;
     
-    DOM.questionTitle.textContent = `Question ${index + 1} ${isMultiChoice ? '(Multiple Choice)' : ''}`;
+    DOM.questionTitle.innerHTML = `Question ${index + 1} ${isMultiChoice ? '<span class="multi-choice-badge">複数選択</span>' : ''}`;
     DOM.questionText.textContent = q.question;
     DOM.optionsContainer.innerHTML = '';
     DOM.feedbackBox.style.display = 'none';
@@ -4001,7 +4021,7 @@ function showResult() {
                             const ans = userAnswers[i];
                             const selectedStr = ans ? ans.selected.map(idx => indexToLetter(idx)).join(',') : '-';
                             return `<tr>
-                                <td>${i+1}</td>
+                                <td><a href="#" class="history-link" onclick="goToQuestion(${i}); return false;">${i+1}</a></td>
                                 <td style="font-size:0.7rem">${q.category}</td>
                                 <td class="${ans && ans.correct ? 'icon-correct' : 'icon-incorrect'}">${ans && ans.correct ? '○' : '×'}</td>
                                 <td>${selectedStr}</td>
@@ -4034,6 +4054,16 @@ function showResult() {
     resDiv.id = 'results-screen';
     resDiv.innerHTML = resultHtml;
     DOM.app.appendChild(resDiv);
+}
+
+function goToQuestion(index) {
+    const resultsScreen = document.getElementById('results-screen');
+    if (resultsScreen) resultsScreen.remove();
+    DOM.quizContainer.style.display = '';
+    currentQuestionIndex = index;
+    loadQuestion(index);
+    updateStats();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function resetQuiz() {
